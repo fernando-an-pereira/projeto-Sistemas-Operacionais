@@ -2,12 +2,19 @@ package tempo;
 
 public class Relogio {
 	
-	private int tempoInicio;
+	private int tempo;
 	private int tempoFim;
 	
 	public Relogio(int tempoInicio, int tempoFim) {
-		this.tempoInicio = tempoInicio;
+		this.tempo = tempoInicio;
 		this.tempoFim = tempoFim;
+	}
+	
+	public boolean avanca(int intervalo) {
+		tempo += intervalo;
+		if(tempo >= tempoFim)
+			return false;
+		return true;
 	}
 	
 }
