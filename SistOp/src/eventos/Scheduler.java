@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import jobs.Job;
 
+import tempo.Relogio;
+
 
 public class Scheduler {
 	ArrayList <Job> listaProcessos;
@@ -15,7 +17,7 @@ public class Scheduler {
 	
 	public void escalonamento(){
 		
-		// ordena pelo tempo de execução ( menor primeiro ): FALTA TESTAR! espero q quando remova o "j" o q era j+1 vire J!!!
+		// ordena pelo instante de chegada ( menor primeiro ): FALTA TESTAR! espero q quando remova o "j" o q era j+1 vire J!!!
 
 		for(int i = 0; i < listaProcessos.size() - 1; i++){
 			for(int j = 0; j < listaProcessos.size() - 1;j++){
@@ -27,6 +29,8 @@ public class Scheduler {
 				}
 			}
 		}
+		
+		
 		
 		while (listaProcessos.isEmpty() == false){
 			Job processo = listaProcessos.remove(0);

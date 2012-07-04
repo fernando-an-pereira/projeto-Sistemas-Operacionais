@@ -3,11 +3,8 @@ package principal;
 import java.util.ArrayList;
 
 import tempo.Relogio;
-
 import jobs.Job;
-
 import leitor.Leitor;
-
 import eventos.Scheduler;
 
 public class Main {
