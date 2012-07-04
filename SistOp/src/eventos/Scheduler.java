@@ -46,7 +46,10 @@ public class Scheduler {
 				//falta o resto => disco e cpu
 				
 			}
-			
+			relogio.avanca(1);
+			memoria.atualizaTempoJobEmExecucao(1);
+			disco.atualizaTempoJobEmExecucao(1);
+			cpu.atualizaTempoJobEmExecucao(1);
 			//filas dos recursos vão andando
 			
 		}

@@ -16,7 +16,7 @@ public class Disco extends Recurso {
 		if(this.estaOcupado() == false){
 			this.forcaOcupado();
 			job.diminuiRequisicoes();
-								// mas e o tempo de uso do DISCO????
+								// mas e o tempo de uso do DISCO???? -> atualizaTempoJobExecucao
 			if( job.getRequisicoesES() != 0){
 				 this.solicita(job);		
 			}
