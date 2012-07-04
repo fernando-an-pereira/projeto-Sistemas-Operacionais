@@ -19,12 +19,11 @@ public class Recurso {
 	
 	public void libera(Job job){
 		jobs.remove(job);
-		if (jobs.peek() == null ){
+		if (jobs.peek() == null ){ // verifica se tem algo no topo
 			this.ocupado = false;
 		}
 		else{
 			this.ocupado = true;
-			
 		}
 	}
 	
