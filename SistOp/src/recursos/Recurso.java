@@ -9,11 +9,23 @@ public class Recurso {
 	private boolean ocupado;
 	
 	public void solicita(Job job) {
-		jobs.add(job);
+		if(this.ocupado == false){
+			this.ocupado = true;
+		}
+		else{
+			jobs.add(job);
+		}
 	}
 	
 	public void libera(Job job){
 		jobs.remove(job);
+		if (jobs.peek() == null ){
+			this.ocupado = false;
+		}
+		else{
+			this.ocupado = true;
+			
+		}
 	}
 	
 	public void emUso(){
