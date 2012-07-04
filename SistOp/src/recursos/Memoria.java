@@ -13,10 +13,10 @@ public class Memoria extends Recurso {
 		this.tamanhovago = tamanho;
 	}
 	
-	public void atribui(Job job)
-		jobs.remove(job);
+	public void atribui(Job job){
+		this.solicita(job);
 		if (job.getMemoriaRequisitada() > this.tamanhovago){
-			this.atribui(job);
+			this.solicita(job);
 		}
 		else{
 			this.tamanhovago -= job.getMemoriaRequisitada();
@@ -24,7 +24,9 @@ public class Memoria extends Recurso {
 		
 	}
 	
-	
-	
+	public void desaloca(Job job){
+		this.tamanhovago += job.getMemoriaRequisitada();
+		this.libera(job);
+	}
 
 }

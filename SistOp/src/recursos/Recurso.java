@@ -11,7 +11,7 @@ public class Recurso {
 		jobs.add(job);
 	}
 	
-	public void atribui(Job job){
+	public void libera(Job job){
 		jobs.remove(job);
 	}
 	
