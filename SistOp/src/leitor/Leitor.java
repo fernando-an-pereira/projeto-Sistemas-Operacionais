@@ -1,23 +1,42 @@
 package leitor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.ArrayList;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
 import jobs.Job;
 
 public class Leitor {
 	
-	public List<Job> retornaJobs(BufferedReader bf) throws Exception {
-		List<Job> jobs = new LinkedList<Job>();	
-//		FileInputStream fis = new FileInputStream(nomeArquivo);
-//		DataInputStream dis = new DataInputStream(fis);
-//		BufferedReader bf = new BufferedReader (new InputStreamReader(dis));
+	private FileInputStream fis;
+	private DataInputStream dis;
+	private BufferedReader bf;
+	
+	public Leitor(String nomeArquivo) throws FileNotFoundException {
+		this.fis = new FileInputStream(nomeArquivo);
+		this.dis = new DataInputStream(fis);
+		this.bf = new BufferedReader (new InputStreamReader(dis));
+	}
+	
+	public int[] retornaTempoExecucao() throws Exception {
+		int[] te = new int[2];
+		String linha;
+		
+		linha = bf.readLine();
+		String[] lol = linha.split(" ");
+		
+		te[0] = Integer.valueOf(lol[0]);
+		te[1] = Integer.valueOf(lol[1]);
+		
+		return te;
+	}
+	
+	public ArrayList<Job> retornaJobs() throws Exception {
+		ArrayList<Job> jobs = new ArrayList<Job>();	
+
 		
 		String linha;
 		
@@ -30,7 +49,7 @@ public class Leitor {
 				int tdp = Integer.valueOf(lol[1]);
 				int mr = Integer.valueOf(lol[2]);
 				int res = Integer.valueOf(lol[3]);
-				jobs.add(new Job(id, tdp, mr, res));
+				jobs.add(id, new Job(tdp, mr, res));
 			}
 			linha = bf.readLine();
 		}
@@ -38,10 +57,28 @@ public class Leitor {
 		return jobs;
 	}
 	
-	public Map<Integer, Integer> retornaTempoDeChegada() throws Exception {
-		Map<Integer, Integer> tc = new HashMap<Integer, Integer>();
+	public int[] retornaTempoDeChegada(int numJobs) throws Exception {
+		int[] tc = new int[numJobs];  
+		
+		String linha;
+		
+		linha = bf.readLine();
+		
+		while(linha.length() > 2) {
+			if(linha.charAt(0) != ';') {
+				String[] lol = linha.split(" ");
+				int id = Integer.valueOf(lol[0]);
+				int tdc = Integer.valueOf(lol[1]);
+				tc[id] = tdc;
+			}
+			linha = bf.readLine();
+		}
 		
 		return tc;
+	}
+	
+	public void encerrar() {
+		
 	}
 	
 }
