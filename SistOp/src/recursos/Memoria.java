@@ -26,6 +26,7 @@ public class Memoria extends Recurso {
 	
 	public void libera(Job job){
 		this.tamanhovago += job.getMemoriaRequisitada();
+		this.remove(job);
 	}
 
 }
