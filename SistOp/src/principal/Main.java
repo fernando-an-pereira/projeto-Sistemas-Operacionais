@@ -23,18 +23,6 @@ public class Main {
 		int[] tc = leitor.retornaTempoDeChegada(jobs.size());
 		leitor.encerrar();
 		
-		for(int i : te)
-			System.out.println(i);
-		
-		for(Job j : jobs) 
-			System.out.println(j.getTempoDeProcessamento() + " " + j.getMemoriaRequisitada() + " " + j.getRequisicoesES());
-		
-		
-		for(int t : tc)
-			System.out.println(t);
-		
-		
-		
 		
 	}
 

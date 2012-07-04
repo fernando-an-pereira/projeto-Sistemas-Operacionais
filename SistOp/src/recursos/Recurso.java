@@ -19,20 +19,12 @@ public class Recurso {
 	
 	public void libera(Job job){
 		jobs.remove(job);
-		if (jobs.peek() == null ){ // verifica se tem algo no topo
+		if (jobs.peek() == null){ // verifica se tem algo no topo
 			this.ocupado = false;
 		}
 		else{
 			this.ocupado = true;
 		}
-	}
-	
-	public void emUso(){
-		this.ocupado = true;
-	}
-	
-	public void livre(){
-		this.ocupado = false;
 	}
 	
 	public boolean estaOcupado(){
