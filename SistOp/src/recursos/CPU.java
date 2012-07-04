@@ -2,8 +2,10 @@ package recursos;
 
 public class CPU extends Recurso {
 
-	public CPU() {
-
+	private final int timeout;
+	
+	public CPU(int timeout) {
+		this.timeout = timeout;
 	}
 
 }
