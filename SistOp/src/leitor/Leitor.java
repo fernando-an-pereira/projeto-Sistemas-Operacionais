@@ -1,11 +1,13 @@
 package leitor;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
-//import java.io.FileInputStream;
+import java.util.Map;
+import java.io.FileInputStream;
 import java.io.BufferedReader;
-//import java.io.DataInputStream;
-//import java.io.InputStreamReader;
+import java.io.DataInputStream;
+import java.io.InputStreamReader;
 
 import jobs.Job;
 
@@ -34,6 +36,12 @@ public class Leitor {
 		}
 		
 		return jobs;
+	}
+	
+	public Map<Integer, Integer> retornaTempoDeChegada() throws Exception {
+		Map<Integer, Integer> tc = new HashMap<Integer, Integer>();
+		
+		return tc;
 	}
 	
 }
