@@ -8,4 +8,6 @@ public class Relogio {
 		this.tempo = tempo;
 	}
 	
+	
+	
 }
