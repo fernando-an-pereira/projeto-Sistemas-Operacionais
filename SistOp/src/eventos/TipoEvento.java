@@ -1,0 +1,12 @@
+package eventos;
+
+public enum TipoEvento {
+	INVALIDO, 
+	CHEGADA, 
+	REQUISICAO_MEMORIA,
+	REQUISICAO_PROCESSADOR,
+	PEDIDO_E_S,
+	REQUISICAO_E_S,
+	LIBERA_E_S,
+	TERMINO;
+}
