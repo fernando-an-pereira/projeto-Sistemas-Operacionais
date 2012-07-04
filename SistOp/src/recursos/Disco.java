@@ -2,8 +2,10 @@ package recursos;
 
 public class Disco extends Recurso {
 
+	private final int tempoUsoJob;
+	
 	public Disco() {
-		// TODO Auto-generated constructor stub
+		this.tempoUsoJob = 50;
 	}
 
 }
