@@ -16,4 +16,4 @@ public class Main {
 }
 
 
-// morte eh a unica ctz... hahaha DP em SO tb eh!
+// morte eh a unica ctz... ta bom... DP em SO tb eh!
