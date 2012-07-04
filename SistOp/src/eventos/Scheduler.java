@@ -43,14 +43,14 @@ public class Scheduler {
 				Job processo = listaProcessos.remove(0);                // espero q quando remova o "j" o q era j+1 vire J!!!
 				memoria.atribui(processo);
 				
-				//falta o resto => disco cpu
+				//falta o resto => disco e cpu
 				
 			}
 			
 			//filas dos recursos vão andando
 			
 		}
-		//FINALIZA!!!!!!!!!!!!!!!!!!
+		//FINALIZA TUDO!!!!!!!!!!!!!!!!!!
 			
 	}
 			
