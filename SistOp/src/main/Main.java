@@ -14,6 +14,3 @@ public class Main {
 	}
 
 }
-
-// JA ELVIS! VAMO DURMIR!
-//ahhahahaha
