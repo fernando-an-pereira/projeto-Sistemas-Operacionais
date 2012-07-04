@@ -17,4 +17,8 @@ public class Relogio {
 		return true;
 	}
 	
+	public int getTempo() {
+		return tempo;
+	}
+	
 }

@@ -1,6 +1,8 @@
-package jobs;
+package eventos;
 
 import java.util.ArrayList;
+
+import jobs.Job;
 
 
 public class Scheduler {
