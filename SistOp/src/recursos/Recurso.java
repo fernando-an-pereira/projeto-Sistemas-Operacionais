@@ -11,4 +11,10 @@ public class Recurso {
 		jobs.add(job);
 	}
 	
+	public void atribui(Job job){
+		jobs.remove(job);
+	}
+	
+	
+	
 }
