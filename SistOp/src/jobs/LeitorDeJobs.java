@@ -21,7 +21,24 @@ public class LeitorDeJobs {
 		
 		while(linha.length() > 2) {
 			if(linha.charAt(0) != ';') {
-				
+				String[] lol = linha.split(" ");
+				int id = Integer.valueOf(lol[0]);
+				int tdp = Integer.valueOf(lol[1]);
+				int mr = Integer.valueOf(lol[2]);
+				int res = Integer.valueOf(lol[3]);
+				jobs.add(new Job(id, tdp, mr, res));
+			}
+			linha = bf.readLine();
+		}
+		
+		while(linha.length() > 2) {
+			if(linha.charAt(0) != ';') {
+				String[] lol = linha.split(" ");
+				int id = Integer.valueOf(lol[0]);
+				int tdp = Integer.valueOf(lol[1]);
+				int mr = Integer.valueOf(lol[2]);
+				int res = Integer.valueOf(lol[3]);
+				jobs.add(new Job(id, tdp, mr, res));
 			}
 			linha = bf.readLine();
 		}
