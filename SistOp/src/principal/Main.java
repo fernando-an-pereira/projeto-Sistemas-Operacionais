@@ -21,6 +21,7 @@ public class Main {
 		Relogio relogio = new Relogio(te[0], te[1]);
 		ArrayList<Job> jobs = leitor.retornaJobs();
 		int[] tc = leitor.retornaTempoDeChegada(jobs.size());
+		leitor.encerrar();
 		
 		for(int i : te)
 			System.out.println(i);
@@ -33,7 +34,7 @@ public class Main {
 			System.out.println(t);
 		
 		
-		leitor.encerrar();
+		
 		
 	}
 

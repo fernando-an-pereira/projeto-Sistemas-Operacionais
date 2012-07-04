@@ -27,10 +27,14 @@ public class Leitor {
 		String linha;
 		
 		linha = bf.readLine();
+		while(linha.charAt(0) == ';') linha = bf.readLine();
 		String[] lol = linha.split(" ");
-		
 		te[0] = Integer.valueOf(lol[0]);
-		te[1] = Integer.valueOf(lol[1]);
+		
+		linha = bf.readLine();
+		while(linha.charAt(0) == ';') linha = bf.readLine();
+		lol = linha.split(" ");
+		te[1] = Integer.valueOf(lol[0]);
 		
 		linha = bf.readLine();
 		
@@ -52,7 +56,7 @@ public class Leitor {
 				int tdp = Integer.valueOf(lol[1]);
 				int mr = Integer.valueOf(lol[2]);
 				int res = Integer.valueOf(lol[3]);
-				jobs.add(id, new Job(tdp, mr, res));
+				jobs.add(id - 1, new Job(tdp, mr, res));
 			}
 			linha = bf.readLine();
 		}
@@ -72,7 +76,7 @@ public class Leitor {
 				String[] lol = linha.split(" ");
 				int id = Integer.valueOf(lol[0]);
 				int tdc = Integer.valueOf(lol[1]);
-				tc[id] = tdc;
+				tc[id - 1] = tdc;
 			}
 			linha = bf.readLine();
 		}
