@@ -15,7 +15,7 @@ public class Disco extends Recurso {
 		
 		if(this.estaOcupado() == false){
 			this.forcaOcupado();
-			job.diminuiRequisicoes();
+								// job.diminuiRequisicoes();
 								// mas e o tempo de uso do DISCO???? -> atualizaTempoJobExecucao
 			if( job.getRequisicoesES() != 0){
 				 this.solicita(job);		
@@ -27,6 +27,18 @@ public class Disco extends Recurso {
 		}
 		else{
 			this.solicita(job);
+		}
+		
+		
+	}
+	
+	public void atualizaTempoJobEmExecucao(Job job, int tempoPercorrido){ // NO DISCO EH DIFERENTE! pois temos que contar quantas requisições faltam, se faltar mais naum libera e sim coloca na fila novamente
+		Job temp = this.getJobRodando();
+		if ( atualizaTempoJobEmExecucao(tempoPercorrido) == true){
+			if (temp.getRequisicoesES() > 1){
+				temp.diminuiRequisicoes();
+				this.solicitaES(temp);
+			}
 		}
 		
 		

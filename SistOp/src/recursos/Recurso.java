@@ -12,7 +12,7 @@ public class Recurso {
 	
 	public void solicita(Job job) {
 		if(this.ocupado == false){
-			this.adicionaJob(job);
+			this.adicionaJobUtilizandoRecurso(job);
 		}
 		else{
 			jobs.add(job);
@@ -23,7 +23,7 @@ public class Recurso {
 		jobs.remove(job);
 		this.jobRodando = null;
 		if (jobs.peek() == null){ // verifica se tem algo no topo
-			this.adicionaJob(job);
+			this.adicionaJobUtilizandoRecurso(job);
 		}
 		else{
 			solicita(job);
@@ -38,17 +38,24 @@ public class Recurso {
 		this.ocupado = true;
 	}
 	
-	public void atualizaTempoJobEmExecucao(int tempoPercorrido){
+	public boolean atualizaTempoJobEmExecucao(int tempoPercorrido){ // retorna true caso o recurso seja liberado
 		this.tempoRestanteJobRodando = this.tempoRestanteJobRodando - tempoPercorrido;
 		if(this.tempoRestanteJobRodando <= 0){
 			this.libera(this.jobRodando);
+			return true;
 		}
+		else
+			return false;
 	}
 	
-	private void adicionaJob(Job job){
+	private void adicionaJobUtilizandoRecurso(Job job){
 		this.ocupado = true;
 		this.jobRodando = job;
 		this.tempoRestanteJobRodando = jobRodando.getTempoDeProcessamento();
+	}
+	
+	public Job getJobRodando(){
+		return this.jobRodando;
 	}
 	
 	
