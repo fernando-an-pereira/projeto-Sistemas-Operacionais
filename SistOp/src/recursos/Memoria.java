@@ -13,13 +13,14 @@ public class Memoria extends Recurso {
 		this.tamanhovago = tamanho;
 	}
 	
-	public void atribui(Job job){
-		this.solicita(job);
+	public void atribui(Job job){ 
+		this.solicita(job);										// 2 solicita se mem requisitada > tamanho vago ?
 		if (job.getMemoriaRequisitada() > this.tamanhovago){
 			this.solicita(job);
 		}
 		else{
 			this.tamanhovago -= job.getMemoriaRequisitada();
+			// job pede CPU
 		}
 		
 	}

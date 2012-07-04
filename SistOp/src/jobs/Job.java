@@ -5,11 +5,13 @@ public class Job {
 	private int tempoDeProcessamento;
 	private int memoriaRequisitada;
 	private int requisicoesES;
+	private int instanteDeChegada;
 	
-	public Job(int tempoDeProcessamento, int memoriaRequisitada, int requisicoesES) {
+	public Job(int tempoDeProcessamento, int memoriaRequisitada, int requisicoesES, int instanteDeChegada) {
+		this.instanteDeChegada = instanteDeChegada;
 		this.tempoDeProcessamento = tempoDeProcessamento;
 		this.memoriaRequisitada = memoriaRequisitada;
-		this.requisicoesES = requisicoesES;	
+		this.requisicoesES = requisicoesES;
 	}
 
 	public int getTempoDeProcessamento() {
@@ -30,6 +32,14 @@ public class Job {
 
 	public int getRequisicoesES() {
 		return requisicoesES;
+	}
+	
+	public int getInstanteDeChegada(){
+		return this.instanteDeChegada;
+	}
+	
+	public void diminuiRequisicoes(){
+		this.requisicoesES--;
 	}
 
 //	public void setRequisicoesES(int requisicoesES) {

@@ -3,10 +3,9 @@ package principal;
 import java.util.ArrayList;
 
 import tempo.Relogio;
-
 import jobs.Job;
-
 import leitor.Leitor;
+import eventos.Scheduler;
 
 public class Main {
 
@@ -18,9 +17,12 @@ public class Main {
 		Leitor leitor = new Leitor("jobs.txt");
 		
 		int[] te = leitor.retornaTempoExecucao();
-		Relogio relogio = new Relogio(te[0], te[1]);
+		// Relogio relogio = new Relogio(te[0], te[1]);
 		ArrayList<Job> jobs = leitor.retornaJobs();
-		int[] tc = leitor.retornaTempoDeChegada(jobs.size());
+		Scheduler scheduler = new Scheduler(jobs);
+		scheduler.escalonamento(te[0], te[1]);
+		
+		// int[] tc = leitor.retornaTempoDeChegada(jobs.size());    
 		leitor.encerrar();
 		
 		
