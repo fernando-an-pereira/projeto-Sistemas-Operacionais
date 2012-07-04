@@ -22,6 +22,15 @@ public class Main {
 		ArrayList<Job> jobs = leitor.retornaJobs();
 		int[] tc = leitor.retornaTempoDeChegada(jobs.size());
 		
+		for(int i : te)
+			System.out.println(i);
+		
+		for(Job j : jobs) 
+			System.out.println(j.getTempoDeProcessamento() + " " + j.getMemoriaRequisitada() + " " + j.getRequisicoesES());
+		
+		
+		for(int t : tc)
+			System.out.println(t);
 		
 		
 		leitor.encerrar();
