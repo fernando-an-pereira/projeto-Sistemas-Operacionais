@@ -27,10 +27,16 @@ public class Leitor {
 		String linha;
 		
 		linha = bf.readLine();
+		while(linha.charAt(0) == ';') linha = bf.readLine();
+		System.out.println(linha);
 		String[] lol = linha.split(" ");
-		
 		te[0] = Integer.valueOf(lol[0]);
-		te[1] = Integer.valueOf(lol[1]);
+		
+		linha = bf.readLine();
+		while(linha.charAt(0) == ';') linha = bf.readLine();
+		System.out.println(linha);
+		lol = linha.split(" ");
+		te[1] = Integer.valueOf(lol[0]);
 		
 		linha = bf.readLine();
 		
