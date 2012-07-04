@@ -7,5 +7,9 @@ public class CPU extends Recurso {
 	public CPU(int timeout) {
 		this.timeout = timeout;
 	}
+	
+	public int getTimeout(){
+		return this.timeout;
+	}
 
 }
