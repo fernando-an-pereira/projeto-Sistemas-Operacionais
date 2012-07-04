@@ -32,7 +32,7 @@ public class Disco extends Recurso {
 		
 	}
 	
-	public void atualizaTempoJobEmExecucao(Job job, int tempoPercorrido){ // NO DISCO EH DIFERENTE! pois temos que contar quantas requisições faltam, se faltar mais naum libera e sim coloca na fila novamente
+	public void atualizaTempoJobEmExecucaoDisco(int tempoPercorrido){ // NO DISCO EH DIFERENTE! pois temos que contar quantas requisições faltam, se faltar mais naum libera e sim coloca na fila novamente
 		Job temp = this.getJobRodando();
 		if ( atualizaTempoJobEmExecucao(tempoPercorrido) == true){
 			if (temp.getRequisicoesES() > 1){
