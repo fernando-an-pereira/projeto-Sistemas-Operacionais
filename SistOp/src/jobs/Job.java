@@ -37,6 +37,10 @@ public class Job {
 	public int getInstanteDeChegada(){
 		return this.instanteDeChegada;
 	}
+	
+	public void diminuiRequisicoes(){
+		this.requisicoesES--;
+	}
 
 //	public void setRequisicoesES(int requisicoesES) {
 //		this.requisicoesES = requisicoesES;

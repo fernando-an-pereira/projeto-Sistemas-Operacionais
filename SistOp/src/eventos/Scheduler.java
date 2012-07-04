@@ -38,11 +38,16 @@ public class Scheduler {
 		CPU cpu = new CPU(10);
 		
 		
-		while (listaProcessos.isEmpty() == false){
-			Job processo = listaProcessos.remove(0);
-			memoria.atribui(processo);
+		while (listaProcessos.isEmpty() == false | relogio.avanca(1) == true ){
+			while( listaProcessos.get(0).getInstanteDeChegada() <= relogio.getTempo() ){
+				Job processo = listaProcessos.remove(0);                // espero q quando remova o "j" o q era j+1 vire J!!!
+				memoria.atribui(processo);
+				
+				
+				
+			}
 			
-			
+			//filas dos recursos vão andando
 			
 		}
 		//FINALIZA!!!!!!!!!!!!!!!!!!

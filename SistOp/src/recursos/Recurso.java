@@ -31,4 +31,8 @@ public class Recurso {
 		return ocupado;
 	}
 	
+	//public void forcaOcupado(){
+	//	this.ocupado = true;
+	//}
+	
 }
