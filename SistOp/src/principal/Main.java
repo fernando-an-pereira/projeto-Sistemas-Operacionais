@@ -8,6 +8,8 @@ import jobs.Job;
 
 import leitor.Leitor;
 
+import eventos.Scheduler;
+
 public class Main {
 
 	/**
@@ -20,6 +22,9 @@ public class Main {
 		int[] te = leitor.retornaTempoExecucao();
 		Relogio relogio = new Relogio(te[0], te[1]);
 		ArrayList<Job> jobs = leitor.retornaJobs();
+		Scheduler scheduler = new Scheduler(jobs);
+		scheduler.escalonamento();
+		
 		int[] tc = leitor.retornaTempoDeChegada(jobs.size());
 		leitor.encerrar();
 		
