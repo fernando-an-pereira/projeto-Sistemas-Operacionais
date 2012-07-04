@@ -10,6 +10,9 @@ import recursos.*;
 
 
 public class Scheduler {
+	
+	private final static int INTERVALO = 1;
+	
 	ArrayList <Job> listaProcessos;
 	
 	public Scheduler(ArrayList <Job> lista){
@@ -38,7 +41,7 @@ public class Scheduler {
 		CPU cpu = new CPU(10);
 		
 		
-		while (listaProcessos.isEmpty() == false | relogio.avanca(1) == true ){
+		while (listaProcessos.isEmpty() == false | relogio.avanca(INTERVALO) == true ){
 			while( listaProcessos.get(0).getInstanteDeChegada() <= relogio.getTempo() ){
 				Job processo = listaProcessos.remove(0);                // espero q quando remova o "j" o q era j+1 vire J!!!
 				memoria.atribui(processo);
@@ -46,11 +49,11 @@ public class Scheduler {
 				//falta o resto => disco e cpu
 				
 			}
-			//filas dos recursos vão andando
-			relogio.avanca(1);
-			memoria.atualizaTempoJobEmExecucao(1);
-			disco.atualizaTempoJobEmExecucaoDisco( 1);
-			cpu.atualizaTempoJobEmExecucao(1);
+
+			relogio.avanca(INTERVALO);
+			memoria.atualizaTempoJobEmExecucao(INTERVALO);
+			disco.atualizaTempoJobEmExecucaoDisco(INTERVALO);
+			cpu.atualizaTempoJobEmExecucao(INTERVALO);
 			
 		}
 		//FINALIZA TUDO!!!!!!!!!!!!!!!!!!
