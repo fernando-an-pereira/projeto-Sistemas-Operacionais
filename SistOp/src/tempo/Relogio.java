@@ -2,12 +2,12 @@ package tempo;
 
 public class Relogio {
 	
-	private int tempo;
+	private int tempoInicio;
+	private int tempoFim;
 	
-	public Relogio(int tempo) {
-		this.tempo = tempo;
+	public Relogio(int tempoInicio, int tempoFim) {
+		this.tempoInicio = tempoInicio;
+		this.tempoFim = tempoFim;
 	}
-	
-	
 	
 }
