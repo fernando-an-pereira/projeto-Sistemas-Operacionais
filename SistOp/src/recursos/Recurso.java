@@ -23,14 +23,9 @@ public class Recurso {
 			this.ocupado = false;
 		}
 		else{
-			this.ocupado = true;
+			solicita(job);
 		}
 	}
-<<<<<<< HEAD
-	
-
-=======
->>>>>>> branch 'master' of https://github.com/fernando-an-pereira/projeto-Sistemas-Operacionais.git
 	
 	public boolean estaOcupado(){
 		return ocupado;
