@@ -27,13 +27,7 @@ public class Recurso {
 		}
 	}
 	
-	public void emUso(){
-		this.ocupado = true;
-	}
-	
-	public void livre(){
-		this.ocupado = false;
-	}
+
 	
 	public boolean estaOcupado(){
 		return ocupado;
