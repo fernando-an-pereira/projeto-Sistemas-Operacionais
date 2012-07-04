@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import jobs.Job;
@@ -30,6 +31,8 @@ public class Leitor {
 		
 		te[0] = Integer.valueOf(lol[0]);
 		te[1] = Integer.valueOf(lol[1]);
+		
+		linha = bf.readLine();
 		
 		return te;
 	}
@@ -77,8 +80,9 @@ public class Leitor {
 		return tc;
 	}
 	
-	public void encerrar() {
-		
+	public void encerrar() throws IOException {
+		dis.close();
+		fis.close();
 	}
 	
 }
