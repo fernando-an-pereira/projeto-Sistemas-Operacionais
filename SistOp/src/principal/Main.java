@@ -17,12 +17,12 @@ public class Main {
 		Leitor leitor = new Leitor("jobs.txt");
 		
 		int[] te = leitor.retornaTempoExecucao();
-		Relogio relogio = new Relogio(te[0], te[1]);
+		// Relogio relogio = new Relogio(te[0], te[1]);
 		ArrayList<Job> jobs = leitor.retornaJobs();
 		Scheduler scheduler = new Scheduler(jobs);
-		scheduler.escalonamento();
+		scheduler.escalonamento(te[0], te[1]);
 		
-		int[] tc = leitor.retornaTempoDeChegada(jobs.size());
+		// int[] tc = leitor.retornaTempoDeChegada(jobs.size());    
 		leitor.encerrar();
 		
 		

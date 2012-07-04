@@ -6,6 +6,8 @@ import jobs.Job;
 
 import tempo.Relogio;
 
+import recursos.*;
+
 
 public class Scheduler {
 	ArrayList <Job> listaProcessos;
@@ -15,7 +17,7 @@ public class Scheduler {
 		this.listaProcessos = lista;
 	}
 	
-	public void escalonamento(){
+	public void escalonamento(int tempoInicio, int tempoFim){
 		
 		// ordena pelo instante de chegada ( menor primeiro ): FALTA TESTAR! espero q quando remova o "j" o q era j+1 vire J!!!
 
@@ -30,10 +32,15 @@ public class Scheduler {
 			}
 		}
 		
+		Relogio relogio = new Relogio(tempoInicio, tempoFim);
+		Memoria memoria = new Memoria(80);
+		Disco disco = new Disco(50);
+		CPU cpu = new CPU(10);
 		
 		
 		while (listaProcessos.isEmpty() == false){
 			Job processo = listaProcessos.remove(0);
+			memoria.atribui(processo);
 			
 			
 			
