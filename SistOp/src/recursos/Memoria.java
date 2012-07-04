@@ -8,7 +8,7 @@ public class Memoria extends Recurso {
 	private int tamanhovago;
 	
 	
-	Memoria(int tam){
+	Memoria(){
 		this.tamanho = 1000;
 		this.tamanhovago = tamanho;
 	}
