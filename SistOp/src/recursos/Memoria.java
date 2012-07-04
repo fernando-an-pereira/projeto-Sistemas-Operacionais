@@ -2,8 +2,10 @@ package recursos;
 
 public class Memoria extends Recurso {
 
-	public Memoria() {
-		// TODO Auto-generated constructor stub
+	private final int tamanho;
+		
+	public Memoria(int tamanho) {
+		this.tamanho = tamanho;
 	}
 
 }
