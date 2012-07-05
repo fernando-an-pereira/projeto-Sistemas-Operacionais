@@ -1,6 +1,9 @@
 package eventos;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import jobs.Job;
 
@@ -13,11 +16,17 @@ public class Scheduler {
 	
 	private final static int INTERVALO = 1;
 	
-	ArrayList <Job> listaProcessos;
+	private Queue<Job> listaProcessos;
+	
+	private Queue<Evento> eventos;
 	
 	public Scheduler(ArrayList <Job> lista){
 		
-		this.listaProcessos = lista;
+		Collections.sort(lista);
+		
+		this.listaProcessos = new LinkedList<Job>(lista);
+		
+		this.eventos = new LinkedList<Evento>();
 	}
 	
 	public void escalonamento(int tempoInicio, int tempoFim){

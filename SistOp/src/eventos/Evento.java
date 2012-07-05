@@ -1,6 +1,6 @@
 package eventos;
 
-public class Evento {
+public class Evento implements Comparable<Evento> {
 	
 	private int tempo;
 	private TipoEvento tipo;
@@ -16,6 +16,11 @@ public class Evento {
 	
 	public TipoEvento getTipo() {
 		return tipo;
+	}
+	
+	@Override
+	public int compareTo(Evento e) {
+		return ((Integer)tempo).compareTo((Integer)e.getTempo());
 	}
 	
 }

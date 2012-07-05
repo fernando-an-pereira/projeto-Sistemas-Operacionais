@@ -1,6 +1,6 @@
 package jobs;
 
-public class Job {
+public class Job implements Comparable<Job> {
 	
 	private int tempoDeProcessamento;
 	private int memoriaRequisitada;
@@ -46,6 +46,10 @@ public class Job {
 //		this.requisicoesES = requisicoesES;
 //	}
 	
+	@Override
+	public int compareTo(Job j) {
+		return ((Integer)this.instanteDeChegada).compareTo((Integer)j.getInstanteDeChegada());
+	}
 	
 	
 }
