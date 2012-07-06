@@ -51,9 +51,11 @@ public class Scheduler {
 				break;
 				
 			case CHEGADA:
+				
 				break;
 				
 			case REQUISICAO_MEMORIA:
+				memoria.solicita(e.getJob());
 				break;
 				
 			case REQUISICAO_PROCESSADOR:

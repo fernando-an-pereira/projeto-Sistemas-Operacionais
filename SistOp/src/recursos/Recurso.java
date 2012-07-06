@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import jobs.Job;
 
 public class Recurso {
-	private Queue<Job> jobs = new LinkedList<Job>();
+	protected Queue<Job> jobs = new LinkedList<Job>();
 	private boolean ocupado;
 	private Job jobRodando;
 	private int tempoRestanteJobRodando;
