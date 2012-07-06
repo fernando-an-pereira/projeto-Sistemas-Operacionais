@@ -1,11 +1,7 @@
 package eventos;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.TreeSet;
 
 import jobs.Job;
 
@@ -47,8 +43,10 @@ public class Scheduler {
 				eventos.add(e);
 			}
 			
+			//
+			
 			// pedido E/S
-			if(true) {
+			if(cpu.getJobRodando().getRequisicoesES() > 0) {
 				Evento e;
 				e = new Evento(relogio.getTempo(), TipoEvento.PEDIDO_E_S, j);
 				eventos.add(e);
@@ -60,7 +58,7 @@ public class Scheduler {
 				
 			}
 			
-			// requisição E/S
+			//requisição E/S
 			if(disco.pedidoPronto(relogio.getTempo())) {
 				Job job = disco.getJobRodando();
 				Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_E_S, job);
@@ -73,6 +71,7 @@ public class Scheduler {
 					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, job);
 					eventos.add(e);
 				}
+				disco.libera(job, relogio.getTempo());
 			}
 			
 			//

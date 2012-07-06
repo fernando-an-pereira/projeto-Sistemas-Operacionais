@@ -14,6 +14,7 @@ public class Recurso {
 	public boolean solicita(Job job, int instante) {
 		if(!this.ocupado){
 			this.adicionaJobUtilizandoRecurso(job);
+			ocupado = true;
 			instanteInicial = instante;
 			return true;
 		}
