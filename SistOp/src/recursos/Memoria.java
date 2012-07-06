@@ -1,8 +1,6 @@
 package recursos;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import jobs.Job;
 
@@ -73,9 +71,8 @@ public class Memoria extends Recurso {
 			}
 		}
 		
-		jobsRodando.add(j);
-		
 		if(j != null) {
+			jobsRodando.add(j);
 			this.tamanhovago -= j.getMemoriaRequisitada();
 		}
 		
