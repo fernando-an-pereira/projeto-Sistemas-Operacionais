@@ -67,12 +67,13 @@ public class Memoria extends Recurso {
 		Job j = null;
 		
 		for(Job jb : jobs) {
-			if(jb.getMemoriaRequisitada() > this.tamanhovago){
+			if(jb.getMemoriaRequisitada() <= this.tamanhovago){
 				j = jb;
 				break;
 			}
 		}
 		
+		jobsRodando.add(j);
 		
 		if(j != null) {
 			this.tamanhovago -= j.getMemoriaRequisitada();
