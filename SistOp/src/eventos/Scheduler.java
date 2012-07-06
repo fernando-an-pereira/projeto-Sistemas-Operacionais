@@ -35,22 +35,18 @@ public class Scheduler {
 		Memoria memoria = new Memoria(80);
 		Disco disco = new Disco(50);
 		CPU cpu = new CPU(10);
-		List<Job> jobsRodando;
+		List<Job> jobsRodando = jobs;
 		
 		while(!jobs.isEmpty() && !relogio.avanca(INTERVALO)) {
-			
-			Evento e = null;
 			
 			Job j = verificaChegadaJob(relogio.getTempo());
 			
 			if(j != null) {
-				
+				Evento e;
+				e = new Evento(relogio.getTempo(), TipoEvento.CHEGADA, j);
 				eventos.add(e);
 			}
 			
-			if(e != null) {
-				
-			}
 			
 			
 		}
