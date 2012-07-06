@@ -21,4 +21,8 @@ public class Relogio {
 		return tempo;
 	}
 	
+	public boolean tempoEncerrado() {
+		return (tempo >= tempoFim);
+	}
+	
 }

@@ -3,7 +3,9 @@ package eventos;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
+import java.util.TreeSet;
 
 import jobs.Job;
 
@@ -16,17 +18,15 @@ public class Scheduler {
 	
 	private final static int INTERVALO = 1;
 	
-	private Queue<Job> listaProcessos;
+	private List<Job> jobs;
 
-	private Queue<Evento> eventos;
+	private List<Evento> eventos;
 	
-	public Scheduler(ArrayList <Job> lista){
+	public Scheduler(ArrayList<Job> listaProcessos){
 		
-		Collections.sort(lista);
+		this.jobs = listaProcessos;
 		
-		this.listaProcessos = new LinkedList<Job>(lista);
-		
-		this.eventos = new LinkedList<Evento>();
+		this.eventos = new ArrayList<Evento>();
 	}
 	
 	public void escalonamento(int tempoInicio, int tempoFim){
@@ -36,12 +36,46 @@ public class Scheduler {
 		Disco disco = new Disco(50);
 		CPU cpu = new CPU(10);
 		
-		Evento e = eventos.poll(); 
+		TreeSet<Evento> treeEventos = new TreeSet<Evento>();
 		
-		while(e != null) {
-			
-			e = eventos.poll();
+		for(Job j : jobs) {
+			Evento e = new Evento(j.getInstanteDeChegada(), TipoEvento.CHEGADA, j);
+			treeEventos.add(e);
 		}
+		
+		while(!treeEventos.isEmpty() && !relogio.tempoEncerrado()) {
+			Evento e = treeEventos.pollFirst();
+			
+			switch(e.getTipo()) {
+			case INVALIDO:
+				break;
+				
+			case CHEGADA:
+				break;
+				
+			case REQUISICAO_MEMORIA:
+				break;
+				
+			case REQUISICAO_PROCESSADOR:
+				break;
+			
+			case PEDIDO_E_S:
+				break;
+				
+			case REQUISICAO_E_S:
+				break;
+				
+			case LIBERA_E_S:
+				break;
+				
+			case TERMINO:
+				break;
+			
+			}
+			
+			eventos.add(e);
+		}
+		
 		
 //		while (listaProcessos.isEmpty() == false | relogio.avanca(INTERVALO) == true ){
 //			while( listaProcessos.get(0).getInstanteDeChegada() <= relogio.getTempo() ){
