@@ -3,7 +3,7 @@ package tempo;
 public class Relogio {
 	
 	private int tempo;
-	private int tempoFim;
+	private final int tempoFim;
 	
 	public Relogio(int tempoInicio, int tempoFim) {
 		this.tempo = tempoInicio;
@@ -23,6 +23,10 @@ public class Relogio {
 	
 	public boolean tempoEncerrado() {
 		return (tempo >= tempoFim);
+	}
+	
+	public int getTempoFim() {
+		return tempoFim;
 	}
 	
 }

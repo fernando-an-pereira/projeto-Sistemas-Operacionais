@@ -1,10 +1,12 @@
 package principal;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import tempo.Relogio;
 import jobs.Job;
 import leitor.Leitor;
+import eventos.Evento;
 import eventos.Scheduler;
 
 public class Main {
@@ -19,12 +21,20 @@ public class Main {
 		int[] te = leitor.retornaTempoExecucao();
 		// Relogio relogio = new Relogio(te[0], te[1]);
 		ArrayList<Job> jobs = leitor.retornaJobs();
-		Scheduler scheduler = new Scheduler(jobs);
-		scheduler.escalonamento(te[0], te[1]);
-		
-		// int[] tc = leitor.retornaTempoDeChegada(jobs.size());    
 		leitor.encerrar();
 		
+		for(Job j : jobs) {
+			System.out.println(j.getId() + " " + j.getTempoDeProcessamento() + " " + j.getMemoriaRequisitada() + " " + j.getRequisicoesES() + " " + j.getInstanteDeChegada());
+		}
+		
+		Scheduler scheduler = new Scheduler(jobs);
+		List<Evento> eventos = scheduler.escalonamento(te[0], te[1]);
+		
+		// int[] tc = leitor.retornaTempoDeChegada(jobs.size());   
+		
+		for(Evento e : eventos) {
+			System.out.println(e.getTempo() + " " + e.getJob().getId() + " " + e.getTipo());
+		}
 		
 	}
 

@@ -37,8 +37,11 @@ public class Memoria extends Recurso {
 //	}
 	
 	public boolean memoriaAlocada(int tempoDoRelogio){
-		ocupado = false;
-		return (this.getTempoRodando(tempoDoRelogio) >=  tempoDeRelocacao);
+		if(ocupado) {
+			ocupado = false;
+			return (this.getTempoRodando(tempoDoRelogio) >=  tempoDeRelocacao);
+		}
+		return false;
 	}
 	
 	public int getTamanho() {

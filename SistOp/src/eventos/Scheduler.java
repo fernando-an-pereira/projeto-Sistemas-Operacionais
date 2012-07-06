@@ -25,18 +25,25 @@ public class Scheduler {
 		this.eventos = new ArrayList<Evento>();
 	}
 	
-	public void escalonamento(int tempoInicio, int tempoFim){
+	public List<Evento> escalonamento(int tempoInicio, int tempoFim){
 		
 		Relogio relogio = new Relogio(tempoInicio, tempoFim);
 		Memoria memoria = new Memoria(80, 10);
 		Disco disco = new Disco(500);
 		CPU cpu = new CPU(10);
-		List<Job> jobsRodando = jobs;
+		List<Job> jobsRodando = new ArrayList<Job>();
 		
-		while(!jobs.isEmpty() && !relogio.avanca(INTERVALO)) {
+		System.out.println(relogio.getTempo() + " " + relogio.getTempoFim());
+		
+		while(!(jobs.isEmpty() && jobsRodando.isEmpty()) && relogio.avanca(INTERVALO)) {
+			
+			System.out.println("Camila de Vermelho");
 			
 			if(verificaChegadaJob(relogio.getTempo()) != null) {
 				Job j = verificaChegadaJob(relogio.getTempo());
+				jobsRodando.add(j);
+				jobs.remove(j);
+				System.out.println("Job " + j.getId() + " chegou no sistema");
 				Evento e = new Evento(relogio.getTempo(), TipoEvento.CHEGADA, j);
 				eventos.add(e);
 				if(memoria.solicita(j, relogio.getTempo())) {
@@ -52,23 +59,24 @@ public class Scheduler {
 			//memoria alocada
 			if(memoria.memoriaAlocada(relogio.getTempo())) {
 				
+				Job j = memoria.getJobRodando();
 				
-				
-				if(cpu.solicita(job, relogio.getTempo())) {
-					Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, job);
+				if(cpu.solicita(j, relogio.getTempo())) {
+					Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j);
 					eventos.add(e);
 				}
 				else {
-					Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, job);
+					Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j);
 					eventos.add(e);
 				}
 			}
 			
 			// pedido E/S
-			if(cpu.getJobRodando().getRequisicoesES() > 0) {
+			if(cpu.getJobRodando()!= null && cpu.getJobRodando().getRequisicoesES() > 0) {
 				Job j = cpu.getJobRodando();
 				Evento e = new Evento(relogio.getTempo(), TipoEvento.PEDIDO_E_S, j);
 				eventos.add(e);
+				j.diminuiRequisicoes();
 				Job jobProcessador = cpu.libera(j, relogio.getTempo());
 				if (jobProcessador != null) {
 					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, jobProcessador);
@@ -133,7 +141,9 @@ public class Scheduler {
 			
 //		}
 		//FINALIZA TUDO!!!!!!!!!!!!!!!!!!
-			
+		
+		return eventos;	
+		
 	}
 	
 	private Job verificaChegadaJob(int time) {
