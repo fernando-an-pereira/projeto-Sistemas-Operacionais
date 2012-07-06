@@ -3,9 +3,11 @@ package recursos;
 public class Disco extends Recurso {
 
 	private final int tempoUsoJob;
+	private int tempoLibera;
 	
-	public Disco(int tempoUsoJob) {
+	public Disco(int tempoUsoJob, int tempoLibera) {
 		this.tempoUsoJob = tempoUsoJob;
+		this.tempoLibera = tempoLibera;
 	}
 	
 	public int getTempoUsoJob() {
@@ -15,7 +17,10 @@ public class Disco extends Recurso {
 	public boolean pedidoPronto(int tempoAtual) {
 		return (this.getTempoRodando(tempoAtual) >= tempoUsoJob);
 	}
-
+	
+	public int getTempoLibera() {
+		return this.tempoLibera;
+	}
 	
 //	public void solicitaES(Job job) {
 		

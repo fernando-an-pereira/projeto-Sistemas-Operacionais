@@ -32,7 +32,7 @@ public class Scheduler {
 		
 		Relogio relogio = new Relogio(tempoInicio, tempoFim);
 		Memoria memoria = new Memoria(800, 10);
-		Disco disco = new Disco(500);
+		Disco disco = new Disco(500, 100);
 		CPU cpu = new CPU(10);
 //		List<Job> jobsRodando = new ArrayList<Job>();
 		
@@ -95,11 +95,11 @@ public class Scheduler {
 				
 			case PEDIDO_E_S:
 				
-				if(disco.estaOcupado() && e.getJob() != disco.getJobRodando()) {
-					s = null;
-					disco.solicita(e.getJob(), relogio.getTempo());
-					break;
-				}
+//				if(disco.estaOcupado() && e.getJob() != disco.getJobRodando()) {
+//					s += "Job entra na fila do disco";
+//					disco.solicita(e.getJob(), relogio.getTempo());
+//					break;
+//				}
 				
 				e.getJob().diminuiRequisicoes();
 				
@@ -108,10 +108,8 @@ public class Scheduler {
 				Job j = cpu.libera(e.getJob(), relogio.getTempo());
 				
 				if(j != null) {
-					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j));
 				}
-				
-				disco.solicita(e.getJob(), relogio.getTempo());
 				
 				addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.REQUISICAO_E_S, e.getJob()));
 				
@@ -121,7 +119,8 @@ public class Scheduler {
 				
 			case REQUISICAO_E_S:
 				
-				addEvento(new Evento(relogio.getTempo(), TipoEvento.LIBERA_E_S, e.getJob()));
+				if(disco.solicita(e.getJob(), relogio.getTempo()))
+					addEvento(new Evento(relogio.getTempo() + disco.getTempoLibera(), TipoEvento.LIBERA_E_S, e.getJob()));
 				
 				break;
 				
@@ -133,7 +132,7 @@ public class Scheduler {
 				
 				if(job != null) {
 	//				System.out.println("Jobd: " + job.getId());
-					addEvento(new Evento(relogio.getTempo(), TipoEvento.PEDIDO_E_S, job));
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_E_S, job));
 				}
 				
 				s += "\tJob libera o disco";
@@ -165,7 +164,7 @@ public class Scheduler {
 		}
 		
 		System.out.println("Fim da simulação: " + relogio.getTempo());
-	
+		
 		return log;	
 		
 	}
