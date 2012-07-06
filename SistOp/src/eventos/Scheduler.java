@@ -28,27 +28,46 @@ public class Scheduler {
 	public void escalonamento(int tempoInicio, int tempoFim){
 		
 		Relogio relogio = new Relogio(tempoInicio, tempoFim);
-		Memoria memoria = new Memoria(80);
-		Disco disco = new Disco(50);
+		Memoria memoria = new Memoria(80, 10);
+		Disco disco = new Disco(500);
 		CPU cpu = new CPU(10);
 		List<Job> jobsRodando = jobs;
 		
 		while(!jobs.isEmpty() && !relogio.avanca(INTERVALO)) {
 			
-			Job j = verificaChegadaJob(relogio.getTempo());
-			
-			if(j != null) {
-				Evento e;
-				e = new Evento(relogio.getTempo(), TipoEvento.CHEGADA, j);
+			if(verificaChegadaJob(relogio.getTempo()) != null) {
+				Job j = verificaChegadaJob(relogio.getTempo());
+				Evento e = new Evento(relogio.getTempo(), TipoEvento.CHEGADA, j);
 				eventos.add(e);
+				if(memoria.solicita(j, relogio.getTempo())) {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_MEMORIA, j);
+					eventos.add(e);
+				}
+				else {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_MEMORIA, j);
+					eventos.add(e);
+				}
 			}
 			
-			//
+			//memoria alocada
+			if(memoria.memoriaAlocada(relogio.getTempo())) {
+				
+				
+				
+				if(cpu.solicita(job, relogio.getTempo())) {
+					Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, job);
+					eventos.add(e);
+				}
+				else {
+					Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, job);
+					eventos.add(e);
+				}
+			}
 			
 			// pedido E/S
 			if(cpu.getJobRodando().getRequisicoesES() > 0) {
-				Evento e;
-				e = new Evento(relogio.getTempo(), TipoEvento.PEDIDO_E_S, j);
+				Job j = cpu.getJobRodando();
+				Evento e = new Evento(relogio.getTempo(), TipoEvento.PEDIDO_E_S, j);
 				eventos.add(e);
 				Job jobProcessador = cpu.libera(j, relogio.getTempo());
 				if (jobProcessador != null) {
@@ -91,6 +110,7 @@ public class Scheduler {
 					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_MEMORIA, j2);
 					eventos.add(e);
 				}
+				jobsRodando.remove(job);
 			}
 			
 		}

@@ -7,14 +7,16 @@ import jobs.Job;
 public class Memoria extends Recurso {
 
 	private final int tamanho;
+	private final int tempoDeRelocacao;
 	private int tamanhovago;
 
 	private ArrayList<Job> jobsRodando = new ArrayList<Job>();
 	
 	
-	public Memoria(int tamanho){
+	public Memoria(int tamanho, int tempoDeRelocacao){
 		this.tamanho = tamanho;
 		this.tamanhovago = tamanho;
+		this.tempoDeRelocacao = tempoDeRelocacao;
 	}
 	
 //	public void atribui(Job job){ 
@@ -33,6 +35,10 @@ public class Memoria extends Recurso {
 //		this.tamanhovago += job.getMemoriaRequisitada();
 //		this.libera(job);
 //	}
+	
+	public boolean memoriaAlocada(int tempoDoRelogio){
+		return (this.getTempoRodando(tempoDoRelogio) >=  tempoDeRelocacao);
+	}
 	
 	public int getTamanho() {
 		return this.tamanho;
@@ -74,6 +80,7 @@ public class Memoria extends Recurso {
 		if(j != null) {
 			jobsRodando.add(j);
 			this.tamanhovago -= j.getMemoriaRequisitada();
+			this.instanteInicial = instante;
 		}
 		
 		return j;

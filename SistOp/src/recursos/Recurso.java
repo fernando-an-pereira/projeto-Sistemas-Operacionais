@@ -9,7 +9,7 @@ public class Recurso {
 	private boolean ocupado = false;
 	private Job jobRodando = null;
 	private int tempoRestanteJobRodando;
-	private int instanteInicial;
+	protected int instanteInicial;
 	
 	public boolean solicita(Job job, int instante) {
 		if(!this.ocupado){
