@@ -1,11 +1,17 @@
 package recursos;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import jobs.Job;
 
 public class Memoria extends Recurso {
 
 	private final int tamanho;
 	private int tamanhovago;
+
+	private ArrayList<Job> jobsRodando = new ArrayList<Job>();
 	
 	
 	public Memoria(int tamanho){
@@ -35,19 +41,44 @@ public class Memoria extends Recurso {
 	}
 	
 	@Override
-	public void solicita(Job job) {
+	public boolean solicita(Job job) {
 		if(job.getMemoriaRequisitada() > this.tamanhovago) {
 			jobs.add(job);
+			return false;
 		}
-		else {
-			this.tamanhovago -= job.getMemoriaRequisitada();
-			// job pede CPU
-		}
+		
+		this.tamanhovago -= job.getMemoriaRequisitada();
+		
+		jobsRodando.add(job);
+		
+		return true;
 	}
 	
 	@Override
-	public void libera(Job job) {
+	public Job libera(Job job) {
+		
+		if(!jobsRodando.contains(job)) {
+			jobs.remove(job);
+			return null;
+		}
+		
 		this.tamanhovago += job.getMemoriaRequisitada();
+
+		Job j = null;
+		
+		for(Job jb : jobs) {
+			if(jb.getMemoriaRequisitada() > this.tamanhovago){
+				j = jb;
+				break;
+			}
+		}
+		
+		
+		if(j != null) {
+			this.tamanhovago -= j.getMemoriaRequisitada();
+		}
+		
+		return j;
 	}
 	
 

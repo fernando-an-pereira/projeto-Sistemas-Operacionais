@@ -59,6 +59,7 @@ public class Scheduler {
 				break;
 				
 			case REQUISICAO_PROCESSADOR:
+				cpu.solicita(e.getJob());
 				break;
 			
 			case PEDIDO_E_S:

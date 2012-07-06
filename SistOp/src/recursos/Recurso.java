@@ -10,16 +10,18 @@ public class Recurso {
 	private Job jobRodando;
 	private int tempoRestanteJobRodando;
 	
-	public void solicita(Job job) {
-		if(this.ocupado == false){
+	public boolean solicita(Job job) {
+		if(!this.ocupado){
 			this.adicionaJobUtilizandoRecurso(job);
+			return true;
 		}
 		else{
 			jobs.add(job);
 		}
+		return false;
 	}
 	
-	public void libera(Job job){
+	public Job libera(Job job){
 		jobs.remove(job);
 		this.jobRodando = null;
 		if (jobs.peek() == null){ // verifica se tem algo no topo
@@ -28,6 +30,8 @@ public class Recurso {
 		else{
 			solicita(job);
 		}
+		
+		return job;
 	}
 	
 	public boolean estaOcupado(){
