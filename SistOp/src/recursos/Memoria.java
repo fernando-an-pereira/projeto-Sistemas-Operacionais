@@ -9,14 +9,18 @@ public class Memoria extends Recurso {
 	private final int tamanho;
 	private final int tempoDeRelocacao;
 	private int tamanhovago;
+	//private final int tamanhoSegmento;
+	
+	// arvore de segmentos
 
 	private ArrayList<Job> jobsRodando = new ArrayList<Job>();
 	
-	
 	public Memoria(int tamanho, int tempoDeRelocacao){
+	//public Memoria(int tamanho, int tempoDeRelocacao, int tamanhoSegmento){
 		this.tamanho = tamanho;
 		this.tamanhovago = tamanho;
 		this.tempoDeRelocacao = tempoDeRelocacao;
+		//this.tamanhoSegmento = tamanhoSegmento;
 	}
 	
 //	public void atribui(Job job){ 
