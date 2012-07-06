@@ -47,6 +47,41 @@ public class Scheduler {
 				eventos.add(e);
 			}
 			
+			// pedido E/S
+			if(true) {
+				Evento e;
+				e = new Evento(relogio.getTempo(), TipoEvento.PEDIDO_E_S, j);
+				eventos.add(e);
+				Job jobProcessador = cpu.libera(j);
+				if (jobProcessador != null) {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, jobProcessador);
+					eventos.add(e);
+				}
+				
+			}
+			
+			// requisição E/S
+			if(disco.pedidoPronto(relogio.getTempo())) {
+				Job job = disco.getJobRodando();
+				Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_E_S, job);
+				eventos.add(e);
+				if(cpu.solicita(job)) {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, job);
+					eventos.add(e);
+				}
+				else {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, job);
+					eventos.add(e);
+				}
+			}
+			
+			
+			//libera
+			if(cpu.tempoFinalizado(relogio.getTempo())) {
+				Job job = cpu.getJobRodando();
+				Evento e = new Evento(relogio.getTempo(), TipoEvento.TERMINO, job);
+				eventos.add(e);
+			}
 			
 			
 		}
