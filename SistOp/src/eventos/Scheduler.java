@@ -75,14 +75,24 @@ public class Scheduler {
 				}
 			}
 			
+			//
 			
 			//libera
 			if(cpu.tempoFinalizado(relogio.getTempo())) {
 				Job job = cpu.getJobRodando();
 				Evento e = new Evento(relogio.getTempo(), TipoEvento.TERMINO, job);
 				eventos.add(e);
+				Job j1 = cpu.libera(job);
+				if(j1 != null) {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j1);
+					eventos.add(e);
+				}
+				Job j2 = memoria.libera(job);
+				if(j2 != null) {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_MEMORIA, j2);
+					eventos.add(e);
+				}
 			}
-			
 			
 		}
 		

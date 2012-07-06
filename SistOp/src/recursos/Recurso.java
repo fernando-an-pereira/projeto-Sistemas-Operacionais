@@ -9,6 +9,7 @@ public class Recurso {
 	private boolean ocupado = false;
 	private Job jobRodando = null;
 	private int tempoRestanteJobRodando;
+	private int tempoJobRodando;
 	
 	public boolean solicita(Job job) {
 		if(!this.ocupado){
@@ -76,6 +77,9 @@ public class Recurso {
 		return this.jobRodando;
 	}
 	
+	protected int getTempoRodando(int tempoDoRelogio) {
+		return tempoDoRelogio - tempoJobRodando;
+	}
 	
 	
 }
