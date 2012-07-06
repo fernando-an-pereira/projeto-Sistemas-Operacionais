@@ -9,11 +9,12 @@ public class Recurso {
 	private boolean ocupado = false;
 	private Job jobRodando = null;
 	private int tempoRestanteJobRodando;
-	private int tempoJobRodando;
+	private int instanteInicial;
 	
-	public boolean solicita(Job job) {
+	public boolean solicita(Job job, int instante) {
 		if(!this.ocupado){
 			this.adicionaJobUtilizandoRecurso(job);
+			instanteInicial = instante;
 			return true;
 		}
 		else{
@@ -22,7 +23,7 @@ public class Recurso {
 		return false;
 	}
 	
-	public Job libera(Job job){
+	public Job libera(Job job, int instante){
 //		jobs.remove(job);
 //		this.jobRodando = null;
 //		if (jobs.peek() == null){ // verifica se tem algo no topo
@@ -37,6 +38,8 @@ public class Recurso {
 		if (jobRodando == job) {
 			j = jobs.poll();
 			jobRodando = j;
+			job.incrementaTempoRodado(getTempoRodando(instante));
+			instanteInicial = instante;
 		}
 		else {
 			jobs.remove(job);
@@ -57,15 +60,15 @@ public class Recurso {
 		this.ocupado = true;
 	}
 	
-	public boolean atualizaTempoJobEmExecucao(int tempoPercorrido){ // retorna true caso o recurso seja liberado
-		this.tempoRestanteJobRodando = this.tempoRestanteJobRodando - tempoPercorrido;
-		if(this.tempoRestanteJobRodando <= 0){
-			this.libera(this.jobRodando);
-			return true;
-		}
-		else
-			return false;
-	}
+//	public boolean atualizaTempoJobEmExecucao(int tempoPercorrido){ // retorna true caso o recurso seja liberado
+//		this.tempoRestanteJobRodando = this.tempoRestanteJobRodando - tempoPercorrido;
+//		if(this.tempoRestanteJobRodando <= 0){
+//			this.libera(this.jobRodando);
+//			return true;
+//		}
+//		else
+//			return false;
+//	}
 	
 	private void adicionaJobUtilizandoRecurso(Job job){
 		this.ocupado = true;
@@ -78,7 +81,7 @@ public class Recurso {
 	}
 	
 	protected int getTempoRodando(int tempoDoRelogio) {
-		return tempoDoRelogio - tempoJobRodando;
+		return tempoDoRelogio - instanteInicial;
 	}
 	
 	
