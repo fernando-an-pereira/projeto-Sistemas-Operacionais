@@ -12,6 +12,7 @@ public class Escritor {
 	private final String nomeArquivoDeSaida = "resultados.txt";
 	
 	
+	
 	public Escritor(int inicio, int fim, int intervalo){
 		this.inicio = inicio;
 		this.fim = fim;
@@ -27,6 +28,7 @@ public class Escritor {
 		bwSaida = new BufferedWriter(fwsaida);
 
 	}
+	
 	
 	public void write(int instante, String tipoDeEvento, String nomePrograma, String açãoExecutada, String resultado){
 		
