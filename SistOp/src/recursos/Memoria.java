@@ -39,7 +39,7 @@ public class Memoria extends Recurso {
 	}
 	
 	@Override
-	public boolean solicita(Job job) {
+	public boolean solicita(Job job, int instante) {
 		if(job.getMemoriaRequisitada() > this.tamanhovago) {
 			jobs.add(job);
 			return false;
@@ -53,7 +53,7 @@ public class Memoria extends Recurso {
 	}
 	
 	@Override
-	public Job libera(Job job) {
+	public Job libera(Job job, int instante) {
 		
 		if(!jobsRodando.contains(job)) {
 			jobs.remove(job);

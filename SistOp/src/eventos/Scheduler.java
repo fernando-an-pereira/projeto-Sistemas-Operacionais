@@ -52,7 +52,7 @@ public class Scheduler {
 				Evento e;
 				e = new Evento(relogio.getTempo(), TipoEvento.PEDIDO_E_S, j);
 				eventos.add(e);
-				Job jobProcessador = cpu.libera(j);
+				Job jobProcessador = cpu.libera(j, relogio.getTempo());
 				if (jobProcessador != null) {
 					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, jobProcessador);
 					eventos.add(e);
@@ -65,7 +65,7 @@ public class Scheduler {
 				Job job = disco.getJobRodando();
 				Evento e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_E_S, job);
 				eventos.add(e);
-				if(cpu.solicita(job)) {
+				if(cpu.solicita(job, relogio.getTempo())) {
 					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, job);
 					eventos.add(e);
 				}
@@ -75,14 +75,24 @@ public class Scheduler {
 				}
 			}
 			
+			//
 			
 			//libera
 			if(cpu.tempoFinalizado(relogio.getTempo())) {
 				Job job = cpu.getJobRodando();
 				Evento e = new Evento(relogio.getTempo(), TipoEvento.TERMINO, job);
 				eventos.add(e);
+				Job j1 = cpu.libera(job, relogio.getTempo());
+				if(j1 != null) {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j1);
+					eventos.add(e);
+				}
+				Job j2 = memoria.libera(job, relogio.getTempo());
+				if(j2 != null) {
+					e = new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_MEMORIA, j2);
+					eventos.add(e);
+				}
 			}
-			
 			
 		}
 		

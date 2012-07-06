@@ -7,6 +7,7 @@ public class Job implements Comparable<Job> {
 	private int memoriaRequisitada;
 	private int requisicoesES;
 	private int instanteDeChegada;
+	private int tempoRodado;
 	
 	public Job(int id, int tempoDeProcessamento, int memoriaRequisitada, int requisicoesES, int instanteDeChegada) {
 		this.id = id;
@@ -14,6 +15,7 @@ public class Job implements Comparable<Job> {
 		this.tempoDeProcessamento = tempoDeProcessamento;
 		this.memoriaRequisitada = memoriaRequisitada;
 		this.requisicoesES = requisicoesES;
+		this.tempoRodado = 0;
 	}
 
 	public int getId() {
@@ -55,6 +57,14 @@ public class Job implements Comparable<Job> {
 	@Override
 	public int compareTo(Job j) {
 		return ((Integer)this.instanteDeChegada).compareTo((Integer)j.getInstanteDeChegada());
+	}
+	
+	public int getTempoRodado() {
+		return tempoRodado;
+	}
+	
+	public void incrementaTempoRodado(int t) {
+		tempoRodado += t;
 	}
 	
 	
