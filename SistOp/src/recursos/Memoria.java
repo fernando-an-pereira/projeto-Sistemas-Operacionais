@@ -37,6 +37,7 @@ public class Memoria extends Recurso {
 //	}
 	
 	public boolean memoriaAlocada(int tempoDoRelogio){
+		ocupado = false;
 		return (this.getTempoRodando(tempoDoRelogio) >=  tempoDeRelocacao);
 	}
 	
@@ -50,6 +51,10 @@ public class Memoria extends Recurso {
 			jobs.add(job);
 			return false;
 		}
+		
+		jobRodando = job;
+		
+		ocupado = true;
 		
 		this.tamanhovago -= job.getMemoriaRequisitada();
 		

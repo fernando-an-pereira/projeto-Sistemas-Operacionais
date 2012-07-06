@@ -6,8 +6,8 @@ import jobs.Job;
 
 public class Recurso {
 	protected Queue<Job> jobs = new LinkedList<Job>();
-	private boolean ocupado = false;
-	private Job jobRodando = null;
+	protected boolean ocupado = false;
+	protected Job jobRodando = null;
 	private int tempoRestanteJobRodando;
 	protected int instanteInicial;
 	
