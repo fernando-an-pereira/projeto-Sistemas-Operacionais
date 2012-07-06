@@ -16,7 +16,7 @@ import recursos.*;
 
 public class Scheduler {
 	
-	private final static int INTERVALO = 1;
+	private final static int INTERVALO = 5;
 	
 	private List<Job> jobs;
 
@@ -35,49 +35,26 @@ public class Scheduler {
 		Memoria memoria = new Memoria(80);
 		Disco disco = new Disco(50);
 		CPU cpu = new CPU(10);
+		List<Job> jobsRodando;
 		
-		TreeSet<Evento> treeEventos = new TreeSet<Evento>();
-		
-		for(Job j : jobs) {
-			Evento e = new Evento(j.getInstanteDeChegada(), TipoEvento.CHEGADA, j);
-			treeEventos.add(e);
-		}
-		
-		while(!treeEventos.isEmpty() && !relogio.tempoEncerrado()) {
-			Evento e = treeEventos.pollFirst();
+		while(!jobs.isEmpty() && !relogio.avanca(INTERVALO)) {
 			
-			switch(e.getTipo()) {
-			case INVALIDO:
-				break;
-				
-			case CHEGADA:
-				
-				break;
-				
-			case REQUISICAO_MEMORIA:
-				memoria.solicita(e.getJob());
-				break;
-				
-			case REQUISICAO_PROCESSADOR:
-				cpu.solicita(e.getJob());
-				break;
+			Evento e = null;
 			
-			case PEDIDO_E_S:
-				break;
-				
-			case REQUISICAO_E_S:
-				break;
-				
-			case LIBERA_E_S:
-				break;
-				
-			case TERMINO:
-				break;
+			Job j = verificaChegadaJob(relogio.getTempo());
 			
+			if(j != null) {
+				
+				eventos.add(e);
 			}
 			
-			eventos.add(e);
+			if(e != null) {
+				
+			}
+			
+			
 		}
+		
 		
 		
 //		while (listaProcessos.isEmpty() == false | relogio.avanca(INTERVALO) == true ){
@@ -97,6 +74,14 @@ public class Scheduler {
 //		}
 		//FINALIZA TUDO!!!!!!!!!!!!!!!!!!
 			
+	}
+	
+	private Job verificaChegadaJob(int time) {
+		for(Job j : jobs) {
+			if (j.getInstanteDeChegada() == time)
+				return j;
+		}
+		return null;
 	}
 			
 			

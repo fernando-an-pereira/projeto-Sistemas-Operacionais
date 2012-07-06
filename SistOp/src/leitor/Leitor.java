@@ -57,7 +57,7 @@ public class Leitor {
 				int mr = Integer.valueOf(lol[2]);
 				int res = Integer.valueOf(lol[3]);
 				int idc = Integer.valueOf(lol[4]);
-				jobs.add(id - 1, new Job(tdp, mr, res, idc));
+				jobs.add(id - 1, new Job(id, tdp, mr, res, idc));
 			}
 			linha = bf.readLine();
 		}

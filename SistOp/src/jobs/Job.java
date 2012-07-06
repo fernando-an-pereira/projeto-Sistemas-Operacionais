@@ -2,18 +2,24 @@ package jobs;
 
 public class Job implements Comparable<Job> {
 	
+	private int id;
 	private int tempoDeProcessamento;
 	private int memoriaRequisitada;
 	private int requisicoesES;
 	private int instanteDeChegada;
 	
-	public Job(int tempoDeProcessamento, int memoriaRequisitada, int requisicoesES, int instanteDeChegada) {
+	public Job(int id, int tempoDeProcessamento, int memoriaRequisitada, int requisicoesES, int instanteDeChegada) {
+		this.id = id;
 		this.instanteDeChegada = instanteDeChegada;
 		this.tempoDeProcessamento = tempoDeProcessamento;
 		this.memoriaRequisitada = memoriaRequisitada;
 		this.requisicoesES = requisicoesES;
 	}
 
+	public int getId() {
+		return id;
+	}
+	
 	public int getTempoDeProcessamento() {
 		return tempoDeProcessamento;
 	}
