@@ -22,16 +22,30 @@ public class Recurso {
 	}
 	
 	public Job libera(Job job){
-		jobs.remove(job);
-		this.jobRodando = null;
-		if (jobs.peek() == null){ // verifica se tem algo no topo
-			this.adicionaJobUtilizandoRecurso(job);
+//		jobs.remove(job);
+//		this.jobRodando = null;
+//		if (jobs.peek() == null){ // verifica se tem algo no topo
+//			this.adicionaJobUtilizandoRecurso(job);
+//		}
+//		else{
+//			solicita(job);
+//		}
+		
+		Job j = null;
+		
+		if (jobRodando == job) {
+			j = jobs.poll();
+			jobRodando = j;
 		}
-		else{
-			solicita(job);
+		else {
+			jobs.remove(job);
 		}
 		
-		return job;
+		if(j == null) {
+			ocupado = false;
+		}
+		
+		return j;
 	}
 	
 	public boolean estaOcupado(){
