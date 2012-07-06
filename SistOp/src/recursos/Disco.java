@@ -8,6 +8,10 @@ public class Disco extends Recurso {
 		this.tempoUsoJob = tempoUsoJob;
 	}
 	
+	public int getTempoUsoJob() {
+		return this.tempoUsoJob;
+	}
+	
 	public boolean pedidoPronto(int tempoAtual) {
 		return (this.getTempoRodando(tempoAtual) >= tempoUsoJob);
 	}

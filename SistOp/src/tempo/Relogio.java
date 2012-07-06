@@ -28,5 +28,9 @@ public class Relogio {
 	public int getTempoFim() {
 		return tempoFim;
 	}
+
+	public void setTempo(int tempo) {
+		this.tempo = tempo;
+	}
 	
 }

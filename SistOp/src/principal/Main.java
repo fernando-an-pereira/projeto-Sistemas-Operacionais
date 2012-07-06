@@ -1,6 +1,7 @@
 package principal;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import tempo.Relogio;
@@ -18,6 +19,8 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		Leitor leitor = new Leitor("jobs.txt");
 		
+		
+		
 		int[] te = leitor.retornaTempoExecucao();
 		// Relogio relogio = new Relogio(te[0], te[1]);
 		ArrayList<Job> jobs = leitor.retornaJobs();
@@ -28,12 +31,12 @@ public class Main {
 		}
 		
 		Scheduler scheduler = new Scheduler(jobs);
-		List<Evento> eventos = scheduler.escalonamento(te[0], te[1]);
+		List<String> log = scheduler.escalonamento(te[0], te[1]);
 		
 		// int[] tc = leitor.retornaTempoDeChegada(jobs.size());   
 		
-		for(Evento e : eventos) {
-			System.out.println(e.getTempo() + " " + e.getJob().getId() + " " + e.getTipo());
+		for(String s : log) {
+			System.out.println(s);
 		}
 		
 	}

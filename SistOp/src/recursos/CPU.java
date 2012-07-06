@@ -15,5 +15,5 @@ public class CPU extends Recurso {
 	public boolean tempoFinalizado(int tempoAtual) {
 		return (this.estaOcupado() && this.getTempoRodando(tempoAtual) + this.getJobRodando().getTempoRodado() >= this.getJobRodando().getTempoDeProcessamento());
 	}
-
+	
 }

@@ -1,6 +1,7 @@
 package recursos;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jobs.Job;
 
@@ -40,6 +41,10 @@ public class Memoria extends Recurso {
 //		this.libera(job);
 //	}
 	
+	public List<Job> getJobsRodando() {
+		return this.jobsRodando;
+	}
+	
 	public boolean memoriaAlocada(int tempoDoRelogio){
 		if(ocupado) {
 			ocupado = false;
@@ -52,6 +57,10 @@ public class Memoria extends Recurso {
 		return this.tamanho;
 	}
 	
+	public int getTempoDeRelocacao() {
+		return this.tempoDeRelocacao;
+	}
+	
 	@Override
 	public boolean solicita(Job job, int instante) {
 		if(job.getMemoriaRequisitada() > this.tamanhovago) {
@@ -62,6 +71,8 @@ public class Memoria extends Recurso {
 		jobRodando = job;
 		
 		ocupado = true;
+		
+		instanteInicial = instante;
 		
 		this.tamanhovago -= job.getMemoriaRequisitada();
 		
