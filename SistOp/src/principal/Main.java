@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import tempo.Relogio;
-import util.CircularLinkedList;
-import util.CircularQueue;
 import jobs.Job;
 import leitor.Leitor;
 import eventos.Evento;
