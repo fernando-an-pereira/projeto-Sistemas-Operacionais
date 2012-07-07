@@ -30,12 +30,12 @@ public class Escritor {
 	}
 	
 	
-	public void write(int instante, String tipoDeEvento, String nomePrograma, String açãoExecutada, String resultado){
+	public void write(int instante, String tipoDeEvento, String nomePrograma, String acaoExecutada, String resultado){
 		
-		/* if(  ){  SE TEMPO DA SAIDA >= TEMPO ATUAL DA SIMULAÇÃO */ 
+		/* if(  ){  SE TEMPO DA SAIDA >= TEMPO ATUAL DA SIMULACAO */ 
 		
 			try {
-				bwSaida.write("Instante: " + instante + "\t" + tipoDeEvento + "\t" + nomePrograma + "\t" + açãoExecutada + "\t" + resultado);
+				bwSaida.write("Instante: " + instante + "\t" + tipoDeEvento + "\t" + nomePrograma + "\t" + acaoExecutada + "\t" + resultado);
 				bwSaida.newLine();
 				bwSaida.flush();
 			} catch (IOException e) {

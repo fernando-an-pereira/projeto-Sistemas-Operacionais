@@ -1,6 +1,6 @@
 package recursos;
 
-public class Segmento () {
+public class Segmento {
 	
 	public Segmento () {
 		

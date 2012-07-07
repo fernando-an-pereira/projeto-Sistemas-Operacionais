@@ -1,4 +1,4 @@
-package Informação;
+package informacao;
 
 public class GerenciadorArquivo {
 

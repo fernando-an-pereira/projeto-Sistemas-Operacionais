@@ -1,6 +1,4 @@
-package Informação;
-
-
+package informacao;
 
 public class Arquivo {
 	private boolean sendoEscrito;
