@@ -21,6 +21,11 @@ public class CPU extends Recurso {
 	public Job verificaMove(int tempoAtual) {
 		if(this.getTempoRodando(tempoAtual) >= timeout) {
 			
+			Job j = this.libera(this.getJobRodando(), tempoAtual);
+			
+			if(j.getTempoRodado() < j.getTempoDeProcessamento());
+				this.solicita(j, tempoAtual);
+			
 			return this.getJobRodando();
 		}
 		

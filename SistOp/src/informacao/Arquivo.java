@@ -4,6 +4,7 @@ public class Arquivo {
 	private boolean sendoEscrito;
 	private int tamanho;
 	private String nome;
+	private boolean publico;
 	
 	public Arquivo(String nome, int tamanho){
 		this.nome = nome;

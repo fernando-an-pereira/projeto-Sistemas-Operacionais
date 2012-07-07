@@ -1,6 +1,7 @@
 package recursos;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import jobs.Job;
@@ -9,18 +10,16 @@ public class Memoria extends Recurso {
 
 	private final int tamanho;
 	private final int tempoDeRelocacao;
-	private int tamanhovago;
 	//private final int tamanhoSegmento;
-	
-	// arvore de segmentos
+	private LinkedList<Segmento> segmentos = new LinkedList<Segmento>();
 
 	private ArrayList<Job> jobsRodando = new ArrayList<Job>();
 	
 	public Memoria(int tamanho, int tempoDeRelocacao){
 	//public Memoria(int tamanho, int tempoDeRelocacao, int tamanhoSegmento){
 		this.tamanho = tamanho;
-		this.tamanhovago = tamanho;
 		this.tempoDeRelocacao = tempoDeRelocacao;
+		this.segmentos.add(new Segmento(tamanho));
 		//this.tamanhoSegmento = tamanhoSegmento;
 	}
 	
@@ -61,22 +60,33 @@ public class Memoria extends Recurso {
 		return this.tempoDeRelocacao;
 	}
 	
-	@Override
-	public boolean solicita(Job job, int instante) {
-		if(job.getMemoriaRequisitada() > this.tamanhovago) {
-			jobs.add(job);
+	public void garbageCollector() {
+		int tamanhoLivre = 0;
+		for(Segmento seg : segmentos) {
+			if(!seg.estaOcupado()) {
+				tamanhoLivre += seg.getTamanho();
+				segmentos.remove(seg);
+			}
+		}
+		
+		Segmento seg = new Segmento(tamanhoLivre);
+		seg.libera();
+		
+		segmentos.add(seg);
+		
+	}
+	
+	public boolean insereSegmento(int tamanho) {
+		Segmento seg = procuraSegmento(tamanho);
+		
+		if(seg == null) {
 			return false;
 		}
 		
-		jobRodando = job;
+		Segmento seg2 = seg.quebra(tamanho);
 		
-		ocupado = true;
 		
-		instanteInicial = instante;
 		
-		this.tamanhovago -= job.getMemoriaRequisitada();
-		
-		jobsRodando.add(job);
 		
 		return true;
 	}
@@ -107,6 +117,29 @@ public class Memoria extends Recurso {
 		}
 		
 		return j;
+	}
+	
+	private Segmento procuraSegmento(int tamanho) {
+		
+		for(Segmento seg : segmentos) {
+			if(!seg.estaOcupado() && seg.getTamanho() >= tamanho)
+				return seg;	
+		}
+		
+		return null;
+	}
+	
+	public int posicaoSegmento(Segmento segmento) {
+		int pos = 0;
+		for(Segmento seg : segmentos) {
+			if(seg == segmento)
+				break;
+			
+			pos += seg.getTamanho();
+		}
+		
+		return pos;
+		
 	}
 	
 
