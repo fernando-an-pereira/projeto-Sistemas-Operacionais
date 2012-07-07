@@ -34,6 +34,7 @@ public class Scheduler {
 		Memoria memoria = new Memoria(800, 10);
 		Disco disco = new Disco(500, 100);
 		CPU cpu = new CPU(10);
+		int overheadTime = 100; 
 //		List<Job> jobsRodando = new ArrayList<Job>();
 		
 		ArrayList<String> log = new ArrayList<String>();
@@ -108,10 +109,10 @@ public class Scheduler {
 				Job j = cpu.libera(e.getJob(), relogio.getTempo());
 				
 				if(j != null) {
-					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j));
+					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_PROCESSADOR, j));
 				}
 				
-				addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.REQUISICAO_E_S, e.getJob()));
+				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_E_S, e.getJob()));
 				
 				s += "\tJob libera o processador e espera pelo disco";
 				
@@ -119,8 +120,12 @@ public class Scheduler {
 				
 			case REQUISICAO_E_S:
 				
-				if(disco.solicita(e.getJob(), relogio.getTempo()))
-					addEvento(new Evento(relogio.getTempo() + disco.getTempoLibera(), TipoEvento.LIBERA_E_S, e.getJob()));
+				if(disco.getJobRodando() == e.getJob() || disco.solicita(e.getJob(), relogio.getTempo())) {
+					s += "\tJob recebe o disco";
+					addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.LIBERA_E_S, e.getJob()));
+				}
+				else
+					s += "\tJob entra na fila do disco";
 				
 				break;
 				
@@ -128,11 +133,11 @@ public class Scheduler {
 				
 				Job job = disco.libera(e.getJob(), relogio.getTempo());
 				
-				addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
+				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
 				
 				if(job != null) {
 	//				System.out.println("Jobd: " + job.getId());
-					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_E_S, job));
+					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.PEDIDO_E_S, job));
 				}
 				
 				s += "\tJob libera o disco";

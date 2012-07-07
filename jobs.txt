@@ -6,5 +6,6 @@
 ; Id | Processing time | Memory space required | I/O requests | Arrival time
 1 120 20 1 20
 2 40 30 4 30
+3 80 50 2 55
 
 ; obs: remember the blank white line after the programs.
