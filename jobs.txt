@@ -1,6 +1,6 @@
 ; simulation start and end time
 10
-4000
+5000
 
 ; Jobs:
 ; Id | Processing time | Memory space required | I/O requests | Arrival time

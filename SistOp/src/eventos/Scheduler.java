@@ -43,17 +43,14 @@ public class Scheduler {
 			addEvento(new Evento(j.getInstanteDeChegada(),TipoEvento.CHEGADA, j));
 		}
 		
-		System.out.println(relogio.getTempo() + " " + relogio.getTempoFim());
+		Evento e = eventos.poll();
 		
-		while(!eventos.isEmpty() && !relogio.tempoEncerrado()) {
-			
-			
-			
-			Evento e = eventos.poll();
+		relogio.setTempo(e.getTempo());
+		
+		while(e != null && !relogio.tempoEncerrado()) {
 			
 			String s = e.getTempo() + "\t\t" + e.getJob().getId() + "\t" + e.getTipo() + "\t";
 			
-			relogio.setTempo(e.getTempo());
 			
 			switch(e.getTipo()) {
 				
@@ -102,8 +99,6 @@ public class Scheduler {
 //					break;
 //				}
 				
-				e.getJob().diminuiRequisicoes();
-				
 				e.getJob().incrementaTempoRodado(cpu.getTempoRodando(relogio.getTempo()));
 				
 				Job j = cpu.libera(e.getJob(), relogio.getTempo());
@@ -123,6 +118,7 @@ public class Scheduler {
 				if(disco.getJobRodando() == e.getJob() || disco.solicita(e.getJob(), relogio.getTempo())) {
 					s += "\tJob recebe o disco";
 					addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.LIBERA_E_S, e.getJob()));
+					e.getJob().diminuiRequisicoes();
 				}
 				else
 					s += "\tJob entra na fila do disco";
@@ -166,6 +162,12 @@ public class Scheduler {
 			if(s != null) {
 				log.add(s);
 			}
+			
+			e = eventos.poll();
+			
+			if(e != null)
+				relogio.setTempo(e.getTempo());
+			
 		}
 		
 		System.out.println("Fim da simulação: " + relogio.getTempo());
