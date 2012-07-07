@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import tempo.Relogio;
+import util.CircularLinkedList;
+import util.CircularQueue;
 import jobs.Job;
 import leitor.Leitor;
 import eventos.Evento;
@@ -17,9 +19,8 @@ public class Main {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
+		
 		Leitor leitor = new Leitor("jobs.txt");
-		
-		
 		
 		int[] te = leitor.retornaTempoExecucao();
 		// Relogio relogio = new Relogio(te[0], te[1]);
