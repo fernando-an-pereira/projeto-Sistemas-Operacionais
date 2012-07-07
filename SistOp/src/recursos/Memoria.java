@@ -72,7 +72,7 @@ public class Memoria extends Recurso {
 		Segmento seg = new Segmento(tamanhoLivre);
 		seg.libera();
 		
-		segmentos.add(seg);
+		segmentos.addFirst(seg);
 		
 	}
 	
@@ -85,10 +85,20 @@ public class Memoria extends Recurso {
 		
 		Segmento seg2 = seg.quebra(tamanho);
 		
+		seg2.ocupa();
 		
-		
+		segmentos.add(segmentos.indexOf(seg) + 1, seg2);
 		
 		return true;
+	}
+	
+	@Override 
+	public boolean solicita(Job job, int instante) {
+		
+		
+		
+		return false;
+		
 	}
 	
 	@Override
