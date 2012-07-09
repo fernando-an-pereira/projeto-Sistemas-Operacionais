@@ -8,7 +8,6 @@ import java.util.StringTokenizer;
 import tempo.Relogio;
 import jobs.Job;
 import leitor.Leitor;
-import eventos.Evento;
 import eventos.Scheduler;
 
 public class Main {

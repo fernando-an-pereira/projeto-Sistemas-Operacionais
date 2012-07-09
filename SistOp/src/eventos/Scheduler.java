@@ -1,8 +1,11 @@
 package eventos;
 
+import informacao.Arquivo;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import jobs.Job;
 
@@ -13,17 +16,21 @@ import recursos.*;
 
 public class Scheduler {
 	
-	private final static int INTERVALO = 5;
-	
 	private List<Job> jobs;
+	private List<Arquivo> arquivos;
 	
 	LinkedList<Evento> eventos = new LinkedList<Evento>(); 
 
 //	private List<Evento> eventos;
 	
-	public Scheduler(ArrayList<Job> listaProcessos){
+	public Scheduler(ArrayList<Job> listaProcessos, ArrayList<Arquivo> arquivos){
 		
 		this.jobs = listaProcessos;
+		this.arquivos = arquivos;
+		
+		for(Arquivo arq : arquivos) {
+			arq.setPossuidor(jobs.get(arq.getIdJob()));
+		}
 		
 //		this.eventos = new ArrayList<Evento>();
 	}
@@ -33,8 +40,11 @@ public class Scheduler {
 		Relogio relogio = new Relogio(tempoInicio, tempoFim);
 		Memoria memoria = new Memoria(800, 10);
 		Disco disco = new Disco(500, 100);
+		DispositivoES device = new DispositivoES(1000);
 		CPU cpu = new CPU(10, 20);
 		int overheadTime = 100; 
+		Random rd = new Random();
+		int tempoRodadoSlice = 0;
 //		List<Job> jobsRodando = new ArrayList<Job>();
 		
 		ArrayList<String> log = new ArrayList<String>();
@@ -56,6 +66,7 @@ public class Scheduler {
 				
 				
 			case INVALIDO:
+				s += "\t\tEvento inválido";
 				break;
 				
 			case CHEGADA:
@@ -76,15 +87,43 @@ public class Scheduler {
 			case REQUISICAO_PROCESSADOR:
 				if(cpu.getJobRodando() == e.getJob() || cpu.solicita(e.getJob(), relogio.getTempo())) {
 					s+= "Job recebe processador";
-					if(e.getJob().getRequisicoesES() > 0) {
-						addEvento(new Evento(relogio.getTempo() + cpu.getTimeout(), TipoEvento.PEDIDO_E_S, e.getJob()));
+					
+					int proximaReES = e.getJob().proximaRequisicaoES() - e.getJob().getTempoRodado() - tempoRodadoSlice;
+					int proximoAcessoArq = e.getJob().proximoAcessoArquivo() - e.getJob().getTempoRodado() - tempoRodadoSlice;
+					int tempoTermino = e.getJob().getTempoDeProcessamento() - e.getJob().getTempoRodado() - tempoRodadoSlice;
+					
+					int proximaRefSegmento = rd.nextInt(cpu.getQuantum() * 2);
+					
+					if(proximaReES <= proximoAcessoArq && proximaReES <= proximaRefSegmento && proximaReES < cpu.getQuantum() - tempoRodadoSlice) {
+						addEvento(new Evento(relogio.getTempo() + proximaReES, TipoEvento.PEDIDO_E_S, e.getJob()));
+						tempoRodadoSlice = 0;
 					}
-					else if(e.getJob().getTempoDeProcessamento() < e.getJob().getTempoRodado()) {
-						addEvento(new Evento(relogio.getTempo(), TipoEvento.TERMINO, e.getJob()));
+					else if(proximoAcessoArq < proximaReES && proximoAcessoArq <= proximaRefSegmento && proximoAcessoArq < cpu.getQuantum() - tempoRodadoSlice) {
+						addEvento(new Evento(relogio.getTempo() + proximoAcessoArq, TipoEvento.REQUISICAO_DISCO, e.getJob()));
+						tempoRodadoSlice = 0;
+					}
+					else if(proximaRefSegmento < cpu.getQuantum() - tempoRodadoSlice && proximaRefSegmento < tempoTermino) {
+						addEvento(new Evento(relogio.getTempo() + proximaRefSegmento, TipoEvento.REQUISICAO_SEGMENTO, e.getJob()));
+						tempoRodadoSlice = proximaRefSegmento;
+					}
+					else if(tempoTermino <= cpu.getQuantum() - tempoRodadoSlice) {
+						addEvento(new Evento(relogio.getTempo() + tempoTermino, TipoEvento.TERMINO, e.getJob()));
+						tempoRodadoSlice = 0;
 					}
 					else {
-						addEvento(new Evento(relogio.getTempo() + e.getJob().getTempoDeProcessamento() - e.getJob().getTempoRodado(), TipoEvento.TERMINO, e.getJob()));
+						addEvento(new Evento(relogio.getTempo() + cpu.getQuantum(), TipoEvento.TIME_SLICE, e.getJob()));
+						tempoRodadoSlice = 0;
 					}
+					
+//					if(e.getJob().getRequisicoesES() > 0 && e.getJob().proximaRequisicaoES() - e.getJob().getTempoRodado() < cpu.getQuantum()) {
+//						addEvento(new Evento(relogio.getTempo() + cpu.getTimeout(), TipoEvento.PEDIDO_E_S, e.getJob()));
+//					}
+//					else if(e.getJob().getTempoDeProcessamento() < e.getJob().getTempoRodado()) {
+//						addEvento(new Evento(relogio.getTempo(), TipoEvento.TERMINO, e.getJob()));
+//					}
+//					else {
+//						addEvento(new Evento(relogio.getTempo() + e.getJob().getTempoDeProcessamento() - e.getJob().getTempoRodado(), TipoEvento.TERMINO, e.getJob()));
+//					}
 				}
 				else {
 					s += "Job adicionado à fila de espera do processador";
@@ -109,19 +148,19 @@ public class Scheduler {
 				
 				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_E_S, e.getJob()));
 				
-				s += "\tJob libera o processador e espera pelo disco";
+				s += "\tJob libera o processador e espera pelo dispositivo";
 				
 				break;
 				
 			case REQUISICAO_E_S:
 				
 				if(disco.getJobRodando() == e.getJob() || disco.solicita(e.getJob(), relogio.getTempo())) {
-					s += "\tJob recebe o disco";
+					s += "\tJob recebe o dispositivo";
 					addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.LIBERA_E_S, e.getJob()));
 					e.getJob().diminuiRequisicoes();
 				}
 				else
-					s += "\tJob entra na fila do disco";
+					s += "\tJob entra na fila do dispositivo";
 				
 				break;
 				
@@ -155,7 +194,39 @@ public class Scheduler {
 				if(j2 != null)
 					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j2));
 				
-				break;	
+				break;
+				
+			case REQUISICAO_DISCO:
+				break;
+				
+			case REQUISICAO_SEGMENTO:
+				
+				Segmento seg = e.getJob().getSegmentoUso();
+				
+				break;
+				
+			case FALTA_SEGMENTO:
+				
+				seg = e.getJob().getSegmentoUso();
+				
+				s += "Falta de segmento " + e.getJob().getSegmentos().listaNos().indexOf(seg) + " ";
+				
+				break;
+				
+			case LIBERA_DISCO:
+				break;
+			case PEDIDO_DISCO:
+				break;
+				
+				
+			case TIME_SLICE:
+				j = cpu.move(relogio.getTempo());
+				tempoRodadoSlice = 0;
+				
+				eventos.add(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j));
+				
+				
+				break;
 			
 			}
 			

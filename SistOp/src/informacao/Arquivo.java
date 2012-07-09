@@ -10,6 +10,10 @@ public class Arquivo {
 	private Job possuidor;
 	private int idJob;
 	
+	public int getIdJob() {
+		return idJob;
+	}
+
 	public Job getPossuidor() {
 		return possuidor;
 	}

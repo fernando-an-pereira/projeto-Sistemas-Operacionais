@@ -62,18 +62,22 @@ public class Job implements Comparable<Job> {
 		
 		for(int i = 0; i < acessoArquivos; i++) {
 			
-			int tempo = rd.nextInt(tdp / ((acessoArquivos - i) * 2)) + tdp / ((acessoArquivos - i) * 2);
-			
-			tdp -= tempo;
+			int tempo;
 			
 			int tempoAnt;
 			
-			try {
-				tempoAnt = tempoAcessoArquivos.get(i - 1);
-			}
-			catch (Exception e) {
-				tempoAnt = 0;
-			}
+			do {	
+				tempo = rd.nextInt(tdp / ((acessoArquivos - i) * 2)) + tdp / ((acessoArquivos - i) * 2);
+				
+				tdp -= tempo;
+				
+				try {
+					tempoAnt = tempoAcessoArquivos.get(i - 1);
+				}
+				catch (Exception e) {
+					tempoAnt = 0;
+				}
+			} while(tempoRequisicoesES.contains(tempo + tempoAnt));
 			
 			tempoAcessoArquivos.add(tempo + tempoAnt);
 			
