@@ -109,22 +109,7 @@ public class Memoria extends Recurso {
 			return null;
 		}
 		
-		this.tamanhovago += job.getMemoriaRequisitada();
-
 		Job j = null;
-		
-		for(Job jb : jobs) {
-			if(jb.getMemoriaRequisitada() <= this.tamanhovago){
-				j = jb;
-				break;
-			}
-		}
-		
-		if(j != null) {
-			jobsRodando.add(j);
-			this.tamanhovago -= j.getMemoriaRequisitada();
-			this.instanteInicial = instante;
-		}
 		
 		return j;
 	}
