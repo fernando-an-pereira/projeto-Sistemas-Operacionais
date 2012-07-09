@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import util.ArvoreN;
+
 import jobs.Job;
 
 public class Memoria extends Recurso {
@@ -138,9 +140,19 @@ public class Memoria extends Recurso {
 	@Override 
 	public boolean solicita(Job job, int instante) {
 		
+		ArvoreN<Segmento> segmentosACarregar = job.getSegmentos();
 		
+		if (procuraSegmento(segmentosACarregar.getCabeca().getTamanho()) == null) return false;
 		
-		return false;
+		for(Segmento seg : segmentosACarregar.listaNos()) {
+			
+			if(!discoParaMemoria(seg)) {
+				break;
+			}
+			
+		}
+		
+		return true;
 		
 	}
 	
