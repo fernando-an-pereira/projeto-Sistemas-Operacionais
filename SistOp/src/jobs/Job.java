@@ -2,9 +2,9 @@ package jobs;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.TreeSet;
 
 import recursos.Segmento;
+import util.ArvoreN;
 
 public class Job implements Comparable<Job> {
 	
@@ -16,6 +16,8 @@ public class Job implements Comparable<Job> {
 	private int instanteDeChegada;
 	private int tempoRodado;
 	private ArrayList<Integer> tempoRequisicoesES = new ArrayList<Integer>();
+	private ArrayList<Integer> tempoAcessoArquivos = new ArrayList<Integer>();
+	private ArvoreN<Segmento> segmentos;
 	
 	
 	public Job(int id, int tempoDeProcessamento, int memoriaRequisitada, int requisicoesES, int acessoArquivos, int instanteDeChegada) {
@@ -47,6 +49,27 @@ public class Job implements Comparable<Job> {
 			}
 			
 			tempoRequisicoesES.add(tempo + tempoAnt);
+			
+		}
+		
+		tdp = tempoDeProcessamento; 
+		
+		for(int i = 0; i < acessoArquivos; i++) {
+			
+			int tempo = rd.nextInt(tdp / ((acessoArquivos - i) * 2)) + tdp / ((acessoArquivos - i) * 2);
+			
+			tdp -= tempo;
+			
+			int tempoAnt;
+			
+			try {
+				tempoAnt = tempoAcessoArquivos.get(i - 1);
+			}
+			catch (Exception e) {
+				tempoAnt = 0;
+			}
+			
+			tempoAcessoArquivos.add(tempo + tempoAnt);
 			
 		}
 		
@@ -115,5 +138,8 @@ public class Job implements Comparable<Job> {
 		return (tempoRequisicoesES.get(tempoRequisicoesES.size() - requisicoesES));
 	}
 	
+	public int proximaAcessoArquivo() {
+		return (tempoAcessoArquivos.get(tempoAcessoArquivos.size() - acessoArquivos));
+	}
 	
 }
