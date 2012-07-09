@@ -38,4 +38,13 @@ public class Segmento {
 		
 	}
 	
+	public boolean quebra(Segmento segmento) {
+		if(segmento.getTamanho() > this.tamanho)
+			return false;
+		
+		this.tamanho -= segmento.getTamanho();
+		
+		return true;
+	}
+	
 }

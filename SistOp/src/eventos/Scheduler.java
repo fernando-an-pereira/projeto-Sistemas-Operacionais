@@ -33,7 +33,7 @@ public class Scheduler {
 		Relogio relogio = new Relogio(tempoInicio, tempoFim);
 		Memoria memoria = new Memoria(800, 10);
 		Disco disco = new Disco(500, 100);
-		CPU cpu = new CPU(10);
+		CPU cpu = new CPU(10, 20);
 		int overheadTime = 100; 
 //		List<Job> jobsRodando = new ArrayList<Job>();
 		

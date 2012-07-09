@@ -11,16 +11,59 @@ public class Memoria extends Recurso {
 	private final int tamanho;
 	private final int tempoDeRelocacao;
 	//private final int tamanhoSegmento;
-	private LinkedList<Segmento> segmentos = new LinkedList<Segmento>();
+	private LinkedList<Segmento> segmentosMemoria = new LinkedList<Segmento>();
+	private LinkedList<Segmento> segmentosDisco = new LinkedList<Segmento>();
 
 	private ArrayList<Job> jobsRodando = new ArrayList<Job>();
+	
+	
 	
 	public Memoria(int tamanho, int tempoDeRelocacao){
 	//public Memoria(int tamanho, int tempoDeRelocacao, int tamanhoSegmento){
 		this.tamanho = tamanho;
 		this.tempoDeRelocacao = tempoDeRelocacao;
-		this.segmentos.add(new Segmento(tamanho));
+		Segmento seg = new Segmento(tamanho);
+		seg.libera();
+		this.segmentosMemoria.add(seg);
 		//this.tamanhoSegmento = tamanhoSegmento;
+	}
+	
+	public void memoriaParaDisco(Segmento segmento) {
+		Segmento livre = new Segmento(segmento.getTamanho());
+		livre.libera();
+		segmentosDisco.add(segmento);
+		segmentosMemoria.set(segmentosMemoria.indexOf(segmento), livre);
+	}
+	
+	public boolean discoParaMemoria(Segmento segmento) {
+		Segmento seg = procuraSegmento(segmento.getTamanho());
+		
+		if(seg == null) {
+			if(!segmentosDisco.contains(segmento))
+				segmentosDisco.add(segmento);
+			return false;
+		}
+		
+		seg.quebra(segmento);
+		
+		segmentosDisco.remove(segmento);
+		
+		segmentosMemoria.add(segmentosMemoria.indexOf(seg) + 1, segmento);
+		
+		return true;
+		
+	}
+	
+	public boolean verificaSegmentoMemoria(Segmento segmento) {
+		return segmentosMemoria.contains(segmento);
+	}
+	
+	public boolean verificaSegmentoDisco(Segmento segmento) {
+		return segmentosDisco.contains(segmento);
+	}
+	
+	public void adicionaSegmento(Segmento segmento) {
+		
 	}
 	
 //	public void atribui(Job job){ 
@@ -62,17 +105,17 @@ public class Memoria extends Recurso {
 	
 	public void garbageCollector() {
 		int tamanhoLivre = 0;
-		for(Segmento seg : segmentos) {
+		for(Segmento seg : segmentosMemoria) {
 			if(!seg.estaOcupado()) {
 				tamanhoLivre += seg.getTamanho();
-				segmentos.remove(seg);
+				segmentosMemoria.remove(seg);
 			}
 		}
 		
 		Segmento seg = new Segmento(tamanhoLivre);
 		seg.libera();
 		
-		segmentos.addFirst(seg);
+		segmentosMemoria.addFirst(seg);
 		
 	}
 	
@@ -87,7 +130,7 @@ public class Memoria extends Recurso {
 		
 		seg2.ocupa();
 		
-		segmentos.add(segmentos.indexOf(seg) + 1, seg2);
+		segmentosMemoria.add(segmentosMemoria.indexOf(seg) + 1, seg2);
 		
 		return true;
 	}
@@ -116,7 +159,7 @@ public class Memoria extends Recurso {
 	
 	private Segmento procuraSegmento(int tamanho) {
 		
-		for(Segmento seg : segmentos) {
+		for(Segmento seg : segmentosMemoria) {
 			if(!seg.estaOcupado() && seg.getTamanho() >= tamanho)
 				return seg;	
 		}
@@ -126,7 +169,7 @@ public class Memoria extends Recurso {
 	
 	public int posicaoSegmento(Segmento segmento) {
 		int pos = 0;
-		for(Segmento seg : segmentos) {
+		for(Segmento seg : segmentosMemoria) {
 			if(seg == segmento)
 				break;
 			
@@ -137,5 +180,4 @@ public class Memoria extends Recurso {
 		
 	}
 	
-
 }

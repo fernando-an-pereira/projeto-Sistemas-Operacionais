@@ -5,9 +5,11 @@ import jobs.Job;
 public class CPU extends Recurso {
 
 	private final int timeout;
+	private final int quantum;
 	
-	public CPU(int timeout) {
+	public CPU(int timeout, int quantum) {
 		this.timeout = timeout;
+		this.quantum = quantum;
 	}
 	
 	public int getTimeout(){
