@@ -10,7 +10,7 @@ c 150 1 3
 
 ; Jobs:
 ; ID | Tempo de processamento | Requsições de E/S | Acessos a arquivos | Tempo de chegada | Arquivos ... |
-1 120 2 3 20 a b
+1 120 2 5 20 a b c
 2 40 1 1 30 b c
 3 80 3 1 55 c
 

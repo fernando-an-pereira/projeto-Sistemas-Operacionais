@@ -43,7 +43,7 @@ public class Scheduler {
 		Disco disco = new Disco(500, 100);
 		DispositivoES device = new DispositivoES(1000);
 		CPU cpu = new CPU(10, 20);
-		int overheadTime = 100; 
+		int overheadTime = 15; 
 		Random rd = new Random();
 		int tempoRodadoSlice = 0;
 //		List<Job> jobsRodando = new ArrayList<Job>();
@@ -72,7 +72,7 @@ public class Scheduler {
 			case INVALIDO:
 				
 				addEvento(new Evento(relogio.getTempo(), TipoEvento.TERMINO, e.getJob()));
-				s += "\t\tJob realizou operação inválida";
+				s += "\tJob realizou operação inválida";
 				
 				break;
 				
@@ -254,7 +254,7 @@ public class Scheduler {
 					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.PEDIDO_DISCO, job));
 				}
 				
-				if(cpu.interrompido()) {
+				if(cpu.interrompido() && e.getJob() == cpu.getJobRodando()) {
 					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.FIM_INTERRUPCAO, e.getJob()));
 					s += "\tTratamento do pedido de interrupção libera disco";
 					break;
