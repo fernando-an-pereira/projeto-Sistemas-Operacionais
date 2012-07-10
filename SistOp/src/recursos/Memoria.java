@@ -137,6 +137,14 @@ public class Memoria extends Recurso {
 		return true;
 	}
 	
+	public void trocaSegmentoMaisAntigo(int tamanho) {
+		
+		Segmento seg = procuraSegmentoOcupado(tamanho);
+		
+		memoriaParaDisco(seg);
+		
+	}
+	
 	@Override 
 	public boolean solicita(Job job, int instante) {
 		
@@ -170,9 +178,17 @@ public class Memoria extends Recurso {
 	}
 	
 	private Segmento procuraSegmento(int tamanho) {
-		
 		for(Segmento seg : segmentosMemoria) {
 			if(!seg.estaOcupado() && seg.getTamanho() >= tamanho)
+				return seg;	
+		}
+		
+		return null;
+	}
+	
+	private Segmento procuraSegmentoOcupado(int tamanho) {
+		for(Segmento seg : segmentosMemoria) {
+			if(seg.estaOcupado() && seg.getTamanho() >= tamanho)
 				return seg;	
 		}
 		

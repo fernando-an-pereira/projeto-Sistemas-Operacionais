@@ -37,6 +37,7 @@ public class Recurso {
 		Job j = null;
 		
 		if (jobRodando == job) {
+//			job.incrementaTempoRodado(instante - instanteInicial);
 			j = jobs.poll();
 			jobRodando = j;
 			instanteInicial = instante;

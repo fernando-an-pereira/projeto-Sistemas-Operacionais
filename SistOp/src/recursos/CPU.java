@@ -6,6 +6,8 @@ public class CPU extends Recurso {
 
 	private final int timeout;
 	private final int quantum;
+	private int instanteInterrupcao;
+	private boolean interrupcao;
 	
 	public int getQuantum() {
 		return quantum;
@@ -24,6 +26,20 @@ public class CPU extends Recurso {
 		return (this.estaOcupado() && this.getTempoRodando(tempoAtual) + this.getJobRodando().getTempoRodado() >= this.getJobRodando().getTempoDeProcessamento());
 	}
 	
+	public boolean interrompido() {
+		return interrupcao;
+	}
+	
+	public void pedidoInterrupcao(int instante) {
+		interrupcao = true;
+		instanteInterrupcao = instante;
+	}
+	
+	public void fimInterrupcao(int instante) {
+		interrupcao = false;
+		instanteInicial += (instante - instanteInterrupcao);
+	}
+	
 //	public Job verificaMove(int tempoAtual) {
 //		if(this.getTempoRodando(tempoAtual) >= timeout) {
 //			
@@ -39,9 +55,11 @@ public class CPU extends Recurso {
 //	}
 	
 	public Job move(int tempoAtual) {
-		Job j = this.libera(this.getJobRodando(), tempoAtual);
 		
-		this.solicita(j, tempoAtual);
+		this.solicita(getJobRodando(), tempoAtual);
+		
+//		Job j = this.getRodando();
+		libera(this.getJobRodando(), tempoAtual);
 		
 		return this.getJobRodando();
 		

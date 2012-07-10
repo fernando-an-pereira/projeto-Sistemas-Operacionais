@@ -1,6 +1,7 @@
 package eventos;
 
 import informacao.Arquivo;
+import informacao.GerenciadorArquivo;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,19 +18,19 @@ import recursos.*;
 public class Scheduler {
 	
 	private List<Job> jobs;
-	private List<Arquivo> arquivos;
+	private GerenciadorArquivo gerArq;
 	
 	LinkedList<Evento> eventos = new LinkedList<Evento>(); 
 
 //	private List<Evento> eventos;
 	
-	public Scheduler(ArrayList<Job> listaProcessos, ArrayList<Arquivo> arquivos){
+	public Scheduler(ArrayList<Job> listaProcessos, GerenciadorArquivo gerArq){
 		
 		this.jobs = listaProcessos;
-		this.arquivos = arquivos;
+		this.gerArq = gerArq;
 		
-		for(Arquivo arq : arquivos) {
-			arq.setPossuidor(jobs.get(arq.getIdJob()));
+		for(Arquivo arq : gerArq.getArquivos()) {
+			arq.setPossuidor(jobs.get(arq.getIdJob() - 1));
 		}
 		
 //		this.eventos = new ArrayList<Evento>();
@@ -88,30 +89,37 @@ public class Scheduler {
 				if(cpu.getJobRodando() == e.getJob() || cpu.solicita(e.getJob(), relogio.getTempo())) {
 					s+= "Job recebe processador";
 					
-					int proximaReES = e.getJob().proximaRequisicaoES() - e.getJob().getTempoRodado() - tempoRodadoSlice;
-					int proximoAcessoArq = e.getJob().proximoAcessoArquivo() - e.getJob().getTempoRodado() - tempoRodadoSlice;
+					int proximaReES = relogio.getTempoFim();
+					int proximoAcessoArq = relogio.getTempoFim();
 					int tempoTermino = e.getJob().getTempoDeProcessamento() - e.getJob().getTempoRodado() - tempoRodadoSlice;
 					
-					int proximaRefSegmento = rd.nextInt(cpu.getQuantum() * 2);
+					if(e.getJob().getRequisicoesES() > 0)
+						proximaReES = e.getJob().proximaRequisicaoES() - e.getJob().getTempoRodado() - tempoRodadoSlice;
+					
+					if(e.getJob().getAcessoArquivos() > 0)
+						proximoAcessoArq = e.getJob().proximoAcessoArquivo() - e.getJob().getTempoRodado() - tempoRodadoSlice;
+					
+					int proximaRefSegmento = rd.nextInt(cpu.getQuantum() * 2) + cpu.getQuantum() / 8;
 					
 					if(proximaReES <= proximoAcessoArq && proximaReES <= proximaRefSegmento && proximaReES < cpu.getQuantum() - tempoRodadoSlice) {
 						addEvento(new Evento(relogio.getTempo() + proximaReES, TipoEvento.PEDIDO_E_S, e.getJob()));
 						tempoRodadoSlice = 0;
 					}
 					else if(proximoAcessoArq < proximaReES && proximoAcessoArq <= proximaRefSegmento && proximoAcessoArq < cpu.getQuantum() - tempoRodadoSlice) {
-						addEvento(new Evento(relogio.getTempo() + proximoAcessoArq, TipoEvento.REQUISICAO_DISCO, e.getJob()));
+//						System.out.println("proximo acesso: " + proximoAcessoArq + ", tempo slice: " + tempoRodadoSlice + ", tempo rodando: " + e.getJob().getTempoRodado());
+						addEvento(new Evento(relogio.getTempo() + proximoAcessoArq, TipoEvento.PEDIDO_DISCO, e.getJob()));
 						tempoRodadoSlice = 0;
 					}
 					else if(proximaRefSegmento < cpu.getQuantum() - tempoRodadoSlice && proximaRefSegmento < tempoTermino) {
 						addEvento(new Evento(relogio.getTempo() + proximaRefSegmento, TipoEvento.REQUISICAO_SEGMENTO, e.getJob()));
-						tempoRodadoSlice = proximaRefSegmento;
+						tempoRodadoSlice += proximaRefSegmento;
 					}
 					else if(tempoTermino <= cpu.getQuantum() - tempoRodadoSlice) {
 						addEvento(new Evento(relogio.getTempo() + tempoTermino, TipoEvento.TERMINO, e.getJob()));
 						tempoRodadoSlice = 0;
 					}
 					else {
-						addEvento(new Evento(relogio.getTempo() + cpu.getQuantum(), TipoEvento.TIME_SLICE, e.getJob()));
+						addEvento(new Evento(relogio.getTempo() + cpu.getQuantum() - tempoRodadoSlice, TipoEvento.TIME_SLICE, e.getJob()));
 						tempoRodadoSlice = 0;
 					}
 					
@@ -154,7 +162,7 @@ public class Scheduler {
 				
 			case REQUISICAO_E_S:
 				
-				if(disco.getJobRodando() == e.getJob() || disco.solicita(e.getJob(), relogio.getTempo())) {
+				if(device.getJobRodando() == e.getJob() || device.solicita(e.getJob(), relogio.getTempo())) {
 					s += "\tJob recebe o dispositivo";
 					addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.LIBERA_E_S, e.getJob()));
 					e.getJob().diminuiRequisicoes();
@@ -166,7 +174,7 @@ public class Scheduler {
 				
 			case LIBERA_E_S:
 				
-				Job job = disco.libera(e.getJob(), relogio.getTempo());
+				Job job = device.libera(e.getJob(), relogio.getTempo());
 				
 				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
 				
@@ -175,7 +183,7 @@ public class Scheduler {
 					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.PEDIDO_E_S, job));
 				}
 				
-				s += "\tJob libera o disco";
+				s += "\tJob libera o dispositivo";
 				
 				
 				break;
@@ -196,35 +204,111 @@ public class Scheduler {
 				
 				break;
 				
+			case PEDIDO_DISCO:
+				
+				e.getJob().incrementaTempoRodado(cpu.getTempoRodando(relogio.getTempo()));
+				
+				j = cpu.libera(e.getJob(), relogio.getTempo());
+				
+				if(j != null) {
+					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_PROCESSADOR, j));
+				}
+				
+				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_DISCO, e.getJob()));
+				
+				s += "\tJob libera o processador e espera pelo disco";
+				
+				break;
+				
 			case REQUISICAO_DISCO:
-				break;
 				
-			case REQUISICAO_SEGMENTO:
+				if(cpu.interrompido()) {
+					if(e.getJob() == disco.getJobRodando() || disco.solicita(e.getJob(), relogio.getTempo())) {
+						s += "Tratamento do pedido de interrupcao recebe o disco";
+						addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.LIBERA_DISCO, e.getJob()));
+					}
+					else
+						s += "Tratamento da interrupcao entra na fila do disco";
+					
+					break;
+				}
 				
-				Segmento seg = e.getJob().getSegmentoUso();
-				
-				break;
-				
-			case FALTA_SEGMENTO:
-				
-				seg = e.getJob().getSegmentoUso();
-				
-				s += "Falta de segmento " + e.getJob().getSegmentos().listaNos().indexOf(seg) + " ";
+				if(disco.getJobRodando() == e.getJob() || disco.solicita(e.getJob(), relogio.getTempo())) {
+					s += "Job recebe o disco";
+					addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.LIBERA_DISCO, e.getJob()));
+					e.getJob().diminuiAcessos();
+				}
+				else
+					s += "Job entra na fila do disco";
 				
 				break;
 				
 			case LIBERA_DISCO:
+				job = disco.libera(e.getJob(), relogio.getTempo());
+				
+				if(job != null) {
+					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.PEDIDO_DISCO, job));
+				}
+				
+				if(cpu.interrompido()) {
+					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.FIM_INTERRUPCAO, e.getJob()));
+					s += "\tTratamento do pedido de interrupção libera disco";
+					break;
+				}
+				
+				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
+				
+				s += "\tJob libera o disco";
+				
 				break;
-			case PEDIDO_DISCO:
+				
+			case REQUISICAO_SEGMENTO:
+				Segmento seg = e.getJob().proximoSegmentoUso();
+				
+				if(memoria.verificaSegmentoMemoria(seg)) {
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.FALTA_SEGMENTO, e.getJob()));
+				}
+				else {
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
+				}
+				
+				break;
+				
+			case FALTA_SEGMENTO:
+				seg = e.getJob().getSegmentoUso();
+				s += "Falta de segmento S" + e.getJob().getSegmentos().listaNos().indexOf(seg) + " na memória";
+				
+				cpu.pedidoInterrupcao(relogio.getTempo());
+				
+				if(!memoria.discoParaMemoria(seg)) {
+					memoria.garbageCollector();
+					if(!memoria.discoParaMemoria(seg)) {
+						memoria.trocaSegmentoMaisAntigo(seg.getTamanho());
+						memoria.discoParaMemoria(seg);
+					}
+				}
+				
+				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_DISCO, e.getJob()));
+				
+				break;
+				
+			case FIM_INTERRUPCAO:
+				
+				cpu.fimInterrupcao(relogio.getTempo());
+				
+				addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
+				
 				break;
 				
 				
 			case TIME_SLICE:
+				e.getJob().incrementaTempoRodado(cpu.getTempoRodando(relogio.getTempo()));
+				
 				j = cpu.move(relogio.getTempo());
-				tempoRodadoSlice = 0;
 				
-				eventos.add(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j));
+				addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j));
 				
+				s += "\tEntrega o processador para o job " + j.getId();
 				
 				break;
 			
@@ -232,12 +316,16 @@ public class Scheduler {
 			
 			if(s != null) {
 				log.add(s);
+				System.out.println(s);
 			}
+			
+			System.out.println("tempo rodando: " + e.getJob().getTempoRodado());
 			
 			e = eventos.poll();
 			
 			if(e != null)
 				relogio.setTempo(e.getTempo());
+				
 			
 		}
 		

@@ -5,9 +5,9 @@ import java.util.List;
 
 public class ArvoreN<E> {
 	
-	private static class No<E> {
+	private class No<E> {
 		private E e;
-		private List<No<E>> referencias;
+		private List<No<E>> referencias = new ArrayList<No<E>>();
 		
 		private No(E e) {
 			this.e = e;
@@ -58,21 +58,31 @@ public class ArvoreN<E> {
 	
 	public boolean addReferencia(E e, E ref) {
 		
+		No<E> node1 = null;
+		No<E> node2 = null;
+		
 		for(No<E> no1 : nos) {
 			if(no1.e == e) {
+				node1 = no1;
 				for(No<E> no2 : nos) {
 					if(no2.e == ref) {
-						no1.referencias.add(no2);
-						return true;
+						node2 = no2;
 					}
 				}
-				No<E> no = new No<E>(ref);
-				no1.referencias.add(no);
-				nos.add(no);
 			}
 		}
 		
-		return false;
+		if(node1 == null)
+			return false;
+					
+		if(node2 == null) {
+			node2 = new No<E>(ref);
+			node1.referencias.add(node2);
+			return false;
+		}
+		
+		node1.referencias.add(node2);
+		return true;
 	}
 	
 	public boolean addReferencia(E e, List<E> refs) {
@@ -98,7 +108,7 @@ public class ArvoreN<E> {
 			}
 		}
 		
-		return null;
+		return new ArrayList<E>();
 	}
 	
 	public E getCabeca() {

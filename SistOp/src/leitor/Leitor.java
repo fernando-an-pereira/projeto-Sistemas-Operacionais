@@ -47,6 +47,8 @@ public class Leitor {
 		
 		linha = bf.readLine();
 		
+		System.out.println(te[0] + " " + te[1]);
+		
 		return te;
 	}
 	
@@ -60,23 +62,25 @@ public class Leitor {
 		
 		while(linha.length() > 2) {
 			if(linha.charAt(0) != ';') {
+//				ID | Tempo de processamento | Requsições de E/S | Acessos a arquivos | Tempo de chegada | Arquivos ... |
 				String[] lol = linha.split(" ");
 				int id = Integer.valueOf(lol[0]);
 				int tdp = Integer.valueOf(lol[1]);
-				int mr = Integer.valueOf(lol[2]);
-				int res = Integer.valueOf(lol[3]);
-				int ra = Integer.valueOf(lol[4]);
-				int idc = Integer.valueOf(lol[5]);
+				int res = Integer.valueOf(lol[2]);
+				int ra = Integer.valueOf(lol[3]);
+				int idc = Integer.valueOf(lol[4]);
 				
 				ArrayList<Arquivo> arquivos = new ArrayList<Arquivo>();
 				
-				for(int i = 6; i < lol.length -1; i++) {
+				for(int i = 5; i < lol.length; i++) {
 					String nome = lol[i];
 					arquivos.add(gerArq.getArquivo(nome));
+					System.out.print(arquivos.get(i - 5).getTamanho() + " ");
 				}
 				
-//				jobs.add(id - 1, new Job(id, tdp, mr, res, ra, idc));
+				jobs.add(id - 1, new Job(id, tdp, res, ra, idc, arquivos));
 				
+				System.out.println(jobs.get(id -1).getId() + " ");
 				
 			}
 			linha = bf.readLine();
@@ -173,7 +177,9 @@ public class Leitor {
 					publico = false;
 				else
 					publico = true;
-				arquivos.add(new Arquivo(nome, tam, publico, idJob));
+				Arquivo arq = new Arquivo(nome, tam, publico, idJob);
+				arquivos.add(arq);
+				System.out.println(arq.getNome());
 			}
 			linha = bf.readLine();
 		}

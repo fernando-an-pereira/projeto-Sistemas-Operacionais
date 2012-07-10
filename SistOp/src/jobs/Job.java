@@ -39,6 +39,8 @@ public class Job implements Comparable<Job> {
 		
 		Random rd = new Random(id + instanteDeChegada + tempoDeProcessamento + requisicoesES + acessoArquivos);
 		
+		System.out.println("----");
+		
 		for(int i = 0; i < requisicoesES; i++) {
 			
 			int tempo = rd.nextInt(tdp / ((requisicoesES - i) * 2)) + tdp / ((requisicoesES - i) * 2);
@@ -56,7 +58,11 @@ public class Job implements Comparable<Job> {
 			
 			tempoRequisicoesES.add(tempo + tempoAnt);
 			
+			System.out.println(tempo + tempoAnt);
+			
 		}
+		
+		System.out.println("----");
 		
 		tdp = tempoDeProcessamento; 
 		
@@ -81,7 +87,11 @@ public class Job implements Comparable<Job> {
 			
 			tempoAcessoArquivos.add(tempo + tempoAnt);
 			
+			System.out.println(tempo + tempoAnt);
+			
 		}
+		
+		System.out.println("----");
 		
 		for(int tempo : tempoAcessoArquivos) {
 			Arquivo arq = arquivos.get(rd.nextInt(arquivos.size()));
