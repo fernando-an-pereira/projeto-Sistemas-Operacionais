@@ -48,6 +48,8 @@ public class Memoria extends Recurso {
 		
 		seg.quebra(segmento);
 		
+		segmento.ocupa();
+		
 		segmentosDisco.remove(segmento);
 		
 		segmentosMemoria.add(segmentosMemoria.indexOf(seg) + 1, segmento);

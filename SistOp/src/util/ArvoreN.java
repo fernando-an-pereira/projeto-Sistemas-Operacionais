@@ -78,6 +78,7 @@ public class ArvoreN<E> {
 		if(node2 == null) {
 			node2 = new No<E>(ref);
 			node1.referencias.add(node2);
+			nos.add(node2);
 			return false;
 		}
 		

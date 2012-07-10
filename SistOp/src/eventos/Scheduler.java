@@ -39,7 +39,7 @@ public class Scheduler {
 	public ArrayList<String> escalonamento(int tempoInicio, int tempoFim){
 		
 		Relogio relogio = new Relogio(tempoInicio, tempoFim);
-		Memoria memoria = new Memoria(800, 10);
+		Memoria memoria = new Memoria(30, 10);
 		Disco disco = new Disco(500, 100);
 		DispositivoES device = new DispositivoES(1000);
 		CPU cpu = new CPU(10, 20);
@@ -52,6 +52,9 @@ public class Scheduler {
 		
 		for(Job j : jobs) {
 			addEvento(new Evento(j.getInstanteDeChegada(),TipoEvento.CHEGADA, j));
+			for(Segmento seg : j.getSegmentos().listaNos()) {
+				System.out.print("segmento: " + seg.getTamanho() +" ,");
+			}
 		}
 		
 		Evento e = eventos.poll();
@@ -265,18 +268,22 @@ public class Scheduler {
 			case REQUISICAO_SEGMENTO:
 				Segmento seg = e.getJob().proximoSegmentoUso();
 				
-				if(memoria.verificaSegmentoMemoria(seg)) {
+				if(!memoria.verificaSegmentoMemoria(seg)) {
 					addEvento(new Evento(relogio.getTempo(), TipoEvento.FALTA_SEGMENTO, e.getJob()));
+					s += "Falta do segmento S" + e.getJob().getSegmentos().listaNos().indexOf(seg);
 				}
 				else {
 					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
+					s += "Referencia o segmento S" + e.getJob().getSegmentos().listaNos().indexOf(seg) + ", presente na memória";
 				}
+				
+				s += ". Tamanho: " + seg.getTamanho();
 				
 				break;
 				
 			case FALTA_SEGMENTO:
 				seg = e.getJob().getSegmentoUso();
-				s += "Falta de segmento S" + e.getJob().getSegmentos().listaNos().indexOf(seg) + " na memória";
+				s += "\tFalta de segmento S" + e.getJob().getSegmentos().listaNos().indexOf(seg) + " na memória";
 				
 				cpu.pedidoInterrupcao(relogio.getTempo());
 				
@@ -316,10 +323,10 @@ public class Scheduler {
 			
 			if(s != null) {
 				log.add(s);
-				System.out.println(s);
+//				System.out.println(s);
 			}
 			
-			System.out.println("tempo rodando: " + e.getJob().getTempoRodado());
+//			System.out.println("tempo rodando: " + e.getJob().getTempoRodado());
 			
 			e = eventos.poll();
 			
