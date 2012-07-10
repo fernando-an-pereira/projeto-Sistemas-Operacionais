@@ -39,7 +39,7 @@ public class Scheduler {
 	public ArrayList<String> escalonamento(int tempoInicio, int tempoFim){
 		
 		Relogio relogio = new Relogio(tempoInicio, tempoFim);
-		Memoria memoria = new Memoria(30, 10);
+		Memoria memoria = new Memoria(100, 10);
 		Disco disco = new Disco(500, 100);
 		DispositivoES device = new DispositivoES(1000);
 		CPU cpu = new CPU(10, 20);
@@ -52,9 +52,9 @@ public class Scheduler {
 		
 		for(Job j : jobs) {
 			addEvento(new Evento(j.getInstanteDeChegada(),TipoEvento.CHEGADA, j));
-			for(Segmento seg : j.getSegmentos().listaNos()) {
-				System.out.print("segmento: " + seg.getTamanho() +" ,");
-			}
+//			for(Segmento seg : j.getSegmentos().listaNos()) {
+//				System.out.print("segmento: " + seg.getTamanho() +" ,");
+//			}
 		}
 		
 		Evento e = eventos.poll();
@@ -70,7 +70,10 @@ public class Scheduler {
 				
 				
 			case INVALIDO:
-				s += "\t\tEvento inválido";
+				
+				addEvento(new Evento(relogio.getTempo(), TipoEvento.TERMINO, e.getJob()));
+				s += "\t\tJob realizou operação inválida";
+				
 				break;
 				
 			case CHEGADA:
@@ -110,7 +113,7 @@ public class Scheduler {
 					}
 					else if(proximoAcessoArq < proximaReES && proximoAcessoArq <= proximaRefSegmento && proximoAcessoArq < cpu.getQuantum() - tempoRodadoSlice) {
 //						System.out.println("proximo acesso: " + proximoAcessoArq + ", tempo slice: " + tempoRodadoSlice + ", tempo rodando: " + e.getJob().getTempoRodado());
-						addEvento(new Evento(relogio.getTempo() + proximoAcessoArq, TipoEvento.PEDIDO_DISCO, e.getJob()));
+						addEvento(new Evento(relogio.getTempo() + proximoAcessoArq, TipoEvento.ACESSA_ARQUIVO, e.getJob()));
 						tempoRodadoSlice = 0;
 					}
 					else if(proximaRefSegmento < cpu.getQuantum() - tempoRodadoSlice && proximaRefSegmento < tempoTermino) {
@@ -154,7 +157,7 @@ public class Scheduler {
 				Job j = cpu.libera(e.getJob(), relogio.getTempo());
 				
 				if(j != null) {
-					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_PROCESSADOR, j));
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j));
 				}
 				
 				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_E_S, e.getJob()));
@@ -199,6 +202,10 @@ public class Scheduler {
 				
 				Job j2 = cpu.libera(e.getJob(), relogio.getTempo());
 				
+				if(e.getJob().getArquivoEmUso() != null) {
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.LIBERA_ARQUIVO, e.getJob()));
+				}
+				
 				if(j1 != null)
 					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_MEMORIA, j1));
 				
@@ -209,23 +216,15 @@ public class Scheduler {
 				
 			case PEDIDO_DISCO:
 				
-				e.getJob().incrementaTempoRodado(cpu.getTempoRodando(relogio.getTempo()));
-				
-				j = cpu.libera(e.getJob(), relogio.getTempo());
-				
-				if(j != null) {
-					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_PROCESSADOR, j));
-				}
-				
 				addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_DISCO, e.getJob()));
 				
-				s += "\tJob libera o processador e espera pelo disco";
+				s += "\tJob espera pelo disco";
 				
 				break;
 				
 			case REQUISICAO_DISCO:
 				
-				if(cpu.interrompido()) {
+				if(cpu.interrompido() && e.getJob() == cpu.getJobRodando()) {
 					if(e.getJob() == disco.getJobRodando() || disco.solicita(e.getJob(), relogio.getTempo())) {
 						s += "Tratamento do pedido de interrupcao recebe o disco";
 						addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.LIBERA_DISCO, e.getJob()));
@@ -237,8 +236,10 @@ public class Scheduler {
 				}
 				
 				if(disco.getJobRodando() == e.getJob() || disco.solicita(e.getJob(), relogio.getTempo())) {
-					s += "Job recebe o disco";
+					s += "Job recebe o disco e acessa o arquivo ";
 					addEvento(new Evento(relogio.getTempo() + disco.getTempoUsoJob(), TipoEvento.LIBERA_DISCO, e.getJob()));
+					e.getJob().setArquivoEmUso(e.getJob().proximoArquivoAcessado());
+					s += e.getJob().getArquivoEmUso().getNome();
 					e.getJob().diminuiAcessos();
 				}
 				else
@@ -305,6 +306,8 @@ public class Scheduler {
 				
 				addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, e.getJob()));
 				
+				s += "\tFim do tratamento da interrupção";
+				
 				break;
 				
 				
@@ -317,6 +320,54 @@ public class Scheduler {
 				
 				s += "\tEntrega o processador para o job " + j.getId();
 				
+				break;
+				
+			case ACESSA_ARQUIVO:
+				Arquivo arq = e.getJob().proximoArquivoAcessado();
+				
+				if(!arq.possuiPermissao(e.getJob())) {
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.INVALIDO, e.getJob()));
+					s += "\tJob não possui permissão para acessar o arquivo";
+					break;
+				}
+				
+				
+				e.getJob().incrementaTempoRodado(cpu.getTempoRodando(relogio.getTempo()));
+				
+				j = cpu.libera(e.getJob(), relogio.getTempo());
+				
+				if(j != null) {
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.REQUISICAO_PROCESSADOR, j));
+				}
+				
+				s += "\tJob libera o processador e ";
+				
+				if(e.getJob().getArquivoEmUso() != null) {
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.LIBERA_ARQUIVO, e.getJob()));
+				}
+				
+				if(arq.getJobRodando() == e.getJob() || arq.solicita(e.getJob(), relogio.getTempo())) {
+					addEvento(new Evento(relogio.getTempo(), TipoEvento.PEDIDO_DISCO, e.getJob()));
+					s += "acessa o arquivo ";
+				}
+				else {
+					
+					s += "entra na fila do arquivo ";
+				}
+				
+				s += arq.getNome();
+				
+				break;
+				
+			case LIBERA_ARQUIVO:
+				arq = e.getJob().getArquivoEmUso();
+				j = arq.libera(e.getJob(), relogio.getTempo());
+				if(j != null)
+					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.ACESSA_ARQUIVO, j));
+				s += "\tJob libera o arquivo " + arq.getNome();
+				break;
+				
+			default:
 				break;
 			
 			}

@@ -1,8 +1,9 @@
 package informacao;
 
+import recursos.Recurso;
 import jobs.Job;
 
-public class Arquivo {
+public class Arquivo extends Recurso{
 	private boolean sendoEscrito;
 	private int tamanho;
 	private String nome;

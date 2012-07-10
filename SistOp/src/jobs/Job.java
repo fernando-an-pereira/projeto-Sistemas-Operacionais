@@ -24,6 +24,7 @@ public class Job implements Comparable<Job> {
 	private HashMap<Integer, Arquivo> arquivoAcessadoTempo = new HashMap<Integer, Arquivo>();
 	private ArvoreN<Segmento> segmentos;
 	private Segmento segmentoUso;
+	private Arquivo arquivoEmUso = null;
 	
 	
 	public Job(int id, int tempoDeProcessamento, int requisicoesES, int acessoArquivos, int instanteDeChegada, ArrayList<Arquivo> arquivos) {
@@ -39,7 +40,7 @@ public class Job implements Comparable<Job> {
 		
 		Random rd = new Random(id + instanteDeChegada + tempoDeProcessamento + requisicoesES + acessoArquivos);
 		
-		System.out.println("----");
+//		System.out.println("----");
 		
 		for(int i = 0; i < requisicoesES; i++) {
 			
@@ -58,11 +59,11 @@ public class Job implements Comparable<Job> {
 			
 			tempoRequisicoesES.add(tempo + tempoAnt);
 			
-			System.out.println(tempo + tempoAnt);
+//			System.out.println(tempo + tempoAnt);
 			
 		}
 		
-		System.out.println("----");
+//		System.out.println("----");
 		
 		tdp = tempoDeProcessamento; 
 		
@@ -87,11 +88,11 @@ public class Job implements Comparable<Job> {
 			
 			tempoAcessoArquivos.add(tempo + tempoAnt);
 			
-			System.out.println(tempo + tempoAnt);
+//			System.out.println(tempo + tempoAnt);
 			
 		}
 		
-		System.out.println("----");
+//		System.out.println("----");
 		
 		for(int tempo : tempoAcessoArquivos) {
 			Arquivo arq = arquivos.get(rd.nextInt(arquivos.size()));
@@ -182,7 +183,7 @@ public class Job implements Comparable<Job> {
 		Random rd = new Random();
 		
 		if(!refs.isEmpty()) {
-			segmentoUso = refs.get(rd.nextInt(refs.size() - 1));
+			segmentoUso = refs.get(rd.nextInt(refs.size()));
 		}
 		
 		return segmentoUso;
@@ -190,6 +191,14 @@ public class Job implements Comparable<Job> {
 	
 	public Segmento getSegmentoUso() {
 		return segmentoUso;
+	}
+
+	public Arquivo getArquivoEmUso() {
+		return arquivoEmUso;
+	}
+
+	public void setArquivoEmUso(Arquivo arquivoEmUso) {
+		this.arquivoEmUso = arquivoEmUso;
 	}
 	
 }

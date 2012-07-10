@@ -34,7 +34,8 @@ public class Memoria extends Recurso {
 		Segmento livre = new Segmento(segmento.getTamanho());
 		livre.libera();
 		segmentosDisco.add(segmento);
-		segmentosMemoria.set(segmentosMemoria.indexOf(segmento), livre);
+		if(segmentosMemoria.contains(segmento))
+			segmentosMemoria.set(segmentosMemoria.indexOf(segmento), livre);
 	}
 	
 	public boolean discoParaMemoria(Segmento segmento) {
@@ -109,12 +110,17 @@ public class Memoria extends Recurso {
 	
 	public void garbageCollector() {
 		int tamanhoLivre = 0;
+		ArrayList<Segmento> segmentosRemovidos = new ArrayList<Segmento>();
+		
 		for(Segmento seg : segmentosMemoria) {
 			if(!seg.estaOcupado()) {
 				tamanhoLivre += seg.getTamanho();
-				segmentosMemoria.remove(seg);
+				segmentosRemovidos.add(seg);
 			}
 		}
+		
+		for(Segmento seg : segmentosRemovidos)
+			segmentosMemoria.remove(seg);
 		
 		Segmento seg = new Segmento(tamanhoLivre);
 		seg.libera();
@@ -143,8 +149,24 @@ public class Memoria extends Recurso {
 		
 		Segmento seg = procuraSegmentoOcupado(tamanho);
 		
-		memoriaParaDisco(seg);
+		if(seg == null) {
+			tamanho -= tamanhoVago();
+			int i = 2;
+			int tam = tamanho;
+			while(tamanho > 0) {
+				seg = procuraSegmentoOcupado(tam);
+				while(seg != null && tamanho > 0) {
+					memoriaParaDisco(seg);
+					tamanho -= seg.getTamanho();
+					seg = procuraSegmentoOcupado(tam);
+				}
+				tam =  (tamanho + i - 1)/ i;
+			}
+			garbageCollector();
+			return;
+		}
 		
+		memoriaParaDisco(seg);
 	}
 	
 	@Override 
@@ -152,7 +174,10 @@ public class Memoria extends Recurso {
 		
 		ArvoreN<Segmento> segmentosACarregar = job.getSegmentos();
 		
-		if (procuraSegmento(segmentosACarregar.getCabeca().getTamanho()) == null) return false;
+		if (procuraSegmento(segmentosACarregar.getCabeca().getTamanho()) == null) {
+			jobs.add(job);
+			return false;
+		}
 		
 		for(Segmento seg : segmentosACarregar.listaNos()) {
 			
@@ -161,6 +186,8 @@ public class Memoria extends Recurso {
 			}
 			
 		}
+		
+		jobsRodando.add(job);
 		
 		return true;
 		
@@ -174,7 +201,11 @@ public class Memoria extends Recurso {
 			return null;
 		}
 		
-		Job j = null;
+		for(Segmento s : job.getSegmentos().listaNos()) {
+			memoriaParaDisco(s);
+		}
+		
+		Job j = jobs.poll();
 		
 		return j;
 	}
@@ -210,4 +241,14 @@ public class Memoria extends Recurso {
 		
 	}
 	
+	private int tamanhoVago() {
+		int tamanhoLivre = 0;
+		for(Segmento seg : segmentosMemoria) {
+			if(!seg.estaOcupado()) {
+				tamanhoLivre += seg.getTamanho();
+			}
+		}
+		return tamanhoLivre;
+	}
+
 }

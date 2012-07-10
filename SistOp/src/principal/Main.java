@@ -63,9 +63,9 @@ public class Main {
 		ArrayList<Job> jobs = leitor.retornaJobs(gerArq);
 		leitor.encerrar();
 		
-		for(Job j : jobs) {
-			System.out.println(j.getId() + " " + j.getTempoDeProcessamento() + " " + j.getRequisicoesES() + " " + j.getInstanteDeChegada());
-		}
+//		for(Job j : jobs) {
+//			System.out.println(j.getId() + " " + j.getTempoDeProcessamento() + " " + j.getRequisicoesES() + " " + j.getInstanteDeChegada());
+//		}
 		
 		Scheduler scheduler = new Scheduler(jobs, gerArq);
 		List<String> log = scheduler.escalonamento(te[0], te[1]);

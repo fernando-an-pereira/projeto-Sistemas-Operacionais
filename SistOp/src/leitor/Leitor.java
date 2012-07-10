@@ -47,7 +47,7 @@ public class Leitor {
 		
 		linha = bf.readLine();
 		
-		System.out.println(te[0] + " " + te[1]);
+//		System.out.println(te[0] + " " + te[1]);
 		
 		return te;
 	}
@@ -75,12 +75,12 @@ public class Leitor {
 				for(int i = 5; i < lol.length; i++) {
 					String nome = lol[i];
 					arquivos.add(gerArq.getArquivo(nome));
-					System.out.print(arquivos.get(i - 5).getTamanho() + " ");
+//					System.out.print(arquivos.get(i - 5).getTamanho() + " ");
 				}
 				
 				jobs.add(id - 1, new Job(id, tdp, res, ra, idc, arquivos));
 				
-				System.out.println(jobs.get(id -1).getId() + " ");
+//				System.out.println(jobs.get(id -1).getId() + " ");
 				
 			}
 			linha = bf.readLine();
@@ -179,7 +179,7 @@ public class Leitor {
 					publico = true;
 				Arquivo arq = new Arquivo(nome, tam, publico, idJob);
 				arquivos.add(arq);
-				System.out.println(arq.getNome());
+//				System.out.println(arq.getNome());
 			}
 			linha = bf.readLine();
 		}
