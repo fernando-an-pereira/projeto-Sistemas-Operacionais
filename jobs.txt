@@ -3,7 +3,7 @@
 100000
 
 ;Arquivos:
-; nome | tamanho | publico (0: privado; 1: publico) | possuidor
+; nome | tamanho | publico (0: privado; 1: publico) | Job possuidor
 a 100 0 1
 b 200 1 2
 c 150 1 3

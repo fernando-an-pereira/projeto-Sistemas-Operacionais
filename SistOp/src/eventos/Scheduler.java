@@ -186,7 +186,7 @@ public class Scheduler {
 				
 				if(job != null) {
 	//				System.out.println("Jobd: " + job.getId());
-					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.PEDIDO_E_S, job));
+					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_E_S, job));
 				}
 				
 				s += "\tJob libera o dispositivo";
@@ -251,7 +251,7 @@ public class Scheduler {
 				job = disco.libera(e.getJob(), relogio.getTempo());
 				
 				if(job != null) {
-					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.PEDIDO_DISCO, job));
+					addEvento(new Evento(relogio.getTempo() + overheadTime, TipoEvento.REQUISICAO_DISCO, job));
 				}
 				
 				if(cpu.interrompido() && e.getJob() == cpu.getJobRodando()) {

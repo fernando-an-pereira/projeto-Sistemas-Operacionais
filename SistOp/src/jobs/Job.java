@@ -92,7 +92,7 @@ public class Job implements Comparable<Job> {
 			
 		}
 		
-		System.out.println("----");
+//		System.out.println("----");
 		
 		for(int tempo : tempoAcessoArquivos) {
 			Arquivo arqAnterior;
@@ -107,7 +107,7 @@ public class Job implements Comparable<Job> {
 				}
 			} while(arq == arqAnterior);
 			arquivoAcessadoTempo.put(tempo, arq);
-			System.out.println(tempo + ": " + arq.getNome());
+//			System.out.println(tempo + ": " + arq.getNome());
 		}
 		
 		Segmento seg = new Segmento(20);
